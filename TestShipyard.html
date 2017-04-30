@@ -1,0 +1,214 @@
+<html>
+<head>
+<title>Shipyard Demonstration</title>
+<style>
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+button {
+	margin-left: 5;
+}
+.panelContainer{
+	width:50%;
+	margin: 0 auto;
+	border:1px solid;
+	padding: 4px;
+}
+.twocolumn{
+	display:table;
+	width: 100%;
+}
+.row{
+	display:table-row;
+	height: 40px;
+}
+.cell{
+	display:table-cell;
+	width:50%;
+	text-align:center;
+}
+.shipbutton{
+	display:inline-block;
+	border:1px solid;
+	width: 95%;
+	padding-top:8px;
+	padding-bottom:8px;
+}
+#tooltip{
+	border:1px solid;
+	background: white;
+}
+#toggle{
+	border:1px solid;
+	float: right;
+	width: 25px;
+	text-align: center;
+}
+</style>
+<script>
+<!--
+var ships=[
+	{'name':'Vitha Colonial Ship','cost':{
+		'iron':50000,
+		'steel':80000,
+		'titanium':5000
+		},
+		'info':{
+		'type':"Colonial Ship",
+		'HP':1,
+		'Power':1,
+		'Armor':1,
+		'Damage Reduction':'0.01%',
+		'Speed':0.3,
+		'Weight':1000,
+		'Stroage':0
+		}
+	},
+	{'name':'ZB03 Small Cargo','cost':{
+		'steel':80000,
+		'titanium':5000
+		},
+		'info':{
+		'type':"Cargoship",
+		'HP':2,
+		'Power':1,
+		'Armor':1,
+		'Damage Reduction':'0.01%',
+		'Speed':0.3,
+		'Weight':2200,
+		'Stroage':10000
+		}
+	},
+	{'name':'ZB04 Fast Cargo','cost':{
+		'steel':80000,
+		'titanium':10000
+		},
+		'info':{
+		'type':"Cargoship",
+		'HP':2,
+		'Power':1,
+		'Armor':1,
+		'Damage Reduction':'0.01%',
+		'Speed':0.5,
+		'Weight':2000,
+		'Stroage':8000
+		}
+	},
+	{'name':'ARK-22','cost':{
+		'steel':200000,
+		'titanium':10000,
+		'plastic':200
+		},
+		'info':{
+		'type':"Fighter",
+		'HP':70,
+		'Power':10,
+		'Armor':100,
+		'Damage Reduction':'1.41%',
+		'Speed':2.8,
+		'Weight':100,
+		'Stroage':100
+		}
+	}
+];
+var buildnum={};
+var sellmode=1;
+
+window.onload=function() {
+	var column=1;
+	var twocolumnstuff='<div class="twocolumn">';
+	for(var ship of ships) {
+		if(column==1) {
+			twocolumnstuff+='<div class="row">';
+		}
+		twocolumnstuff+='<div class="cell"><div class="shipbutton" id="Button '+ship.name+'"><div style="float:right" id="Sell '+ship.name+'">[remove]</div><div class="buybutton">'+ship.name+'</div></div></div>';
+		if(column==2) {
+			twocolumnstuff+='</div>';
+		}
+		if(column==1) {
+			column=2;
+		}
+		else {
+			column=1;
+		}
+	}
+	twocolumnstuff+='</div>';
+	
+	document.getElementById('shiplist').innerHTML+=twocolumnstuff;
+	for(var ship of ships) {
+		(function(ship) {
+			
+			var button=document.getElementById('Button '+ship.name);
+			var removebutton=document.getElementById('Sell '+ship.name);
+			var button_rect=button.getBoundingClientRect();
+			var tooltip=document.getElementById('tooltip');
+			
+			removebutton.onmouseover=function(){
+				sellmode=-1;
+			}
+			removebutton.onmouseout=function(){
+				sellmode=1;
+			}
+			button.onmouseover=function() {
+				tooltip.style.display = 'block';
+				tooltip.style.left=button_rect.left;
+				tooltip.style.top=button_rect.bottom;
+				var newDetails='<ul>';
+				for (var material in ship.cost) {
+					newDetails+='<li>'+material+': '+ship.cost[material]+'</li>';
+				}
+				newDetails+='</ul><hr /><div style="text-align:center">Info</div><ul>';
+				for (var stat in ship.info) {
+					newDetails+='<li>'+stat+': '+ship.info[stat]+'</li>';
+				}
+				newDetails+="</ul>";
+				tooltip.innerHTML=newDetails;
+			}
+			button.onmouseout=function() {
+				tooltip.style.display = 'none';
+			}
+			button.onclick=function() {
+				numberBuilt=Math.max(parseInt(document.getElementById('number').value,10)||0,0);
+				buildnum[ship.name]=Math.max(buildnum[ship.name]+numberBuilt*sellmode,0)||Math.max(numberBuilt*sellmode,0);
+				button.getElementsByClassName('buybutton')[0].innerHTML=ship.name+' ('+buildnum[ship.name]+')';
+			}
+		})(ship);
+	}
+	var shipnumberbuttons=document.getElementsByClassName('shipnumberbutton');
+	for (var shipnumberbutton of shipnumberbuttons) {
+		(function(shipnumberbutton) {
+			shipnumberbutton.onclick=function() {
+				document.getElementById('number').value=parseInt(shipnumberbutton.innerHTML);
+			}
+		})(shipnumberbutton)
+	}
+	var togglebutton=document.getElementById('toggle');
+	togglebutton.onclick=function() {
+		if(togglebutton.innerHTML=='-') {
+			document.getElementById('container').style.display="none";
+			togglebutton.innerHTML='+'
+		}
+		else {
+			document.getElementById('container').style.display="block";
+			togglebutton.innerHTML='-'
+		}
+	}
+}
+-->
+</script>
+</head>
+
+<body>
+<div id="tooltip" style="display: none; position: absolute"></div>
+<div class="panelContainer">
+	<div id="toggle">-</div>
+	<div class="title">Build Ships</div>
+	<div id="container">
+		<p>How many? <input type="text" id="number" value="1" /><button class="shipnumberbutton">1</button><button class="shipnumberbutton">10</button><button class="shipnumberbutton">100</button><button class="shipnumberbutton">1000</button><button class="shipnumberbutton">10000</button><button class="shipnumberbutton">100000</button><button class="shipnumberbutton">1000000</button></p>
+		<div id="shiplist"></div>
+	</div>
+</div>
+</body>
+</html>
