@@ -87,7 +87,7 @@ function startLoop() {
 		stats.population.overall.diseases[1].infected*=populationReduction*(1-stats.population.overall.diseases[1]['immunity rate'])*(1-stats.population.overall.diseases[1]['death rate'])/(1-stats.population.overall.diseases[1]['infection rate']*stats.population.overall.diseases[1]['death rate']);
 		stats.population.overall.diseases[1]['infection rate']=stats.population.overall.diseases[1].infected/stats.population.overall['total population'];
 		
-		stats.population.overall.diseases[1].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[1].infected)*
+		stats.population.overall.diseases[1].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[1].infected-stats.population.overall.diseases[1]['immune population'])*
 		(1-Math.pow(1-stats.population.overall.diseases[1]['transmission rate'],stats.population.overall.diseases[1].infected));
 		
 		//Measles
