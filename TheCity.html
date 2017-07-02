@@ -65,11 +65,11 @@ function startLoop() {
 		stats.population.overall.diseases[0]['infection rate']=stats.population.overall.diseases[0].infected/stats.population.overall['total population'];
 		
 		stats.population.overall.diseases[0].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[0].infected)*
-		(1-Math.pow(0.999999999,stats.wildlife[0].diseases[0].infected));
+		(1-Math.pow(0.999999995,stats.wildlife[0].diseases[0].infected));
 		
 		stats.wildlife[0].diseases[0].infected*=(1-1/200);
 		stats.wildlife[0].diseases[0].infected+=(stats.wildlife[0]['number']-stats.wildlife[0].diseases[0].infected)*
-		(1-Math.pow(0.999999999,stats.population.overall.diseases[0].infected));
+		(1-Math.pow(0.999999995,stats.population.overall.diseases[0].infected));
 		
 		if (stats.resources[0]['daily consumption']<stats.resources[0]['daily amount']) {
 			stats.resources[0]['satisfaction rate']=1;
