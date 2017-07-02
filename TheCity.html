@@ -34,7 +34,18 @@ var stats={
 	},
 	'time':{'division':0,'day':0,'year':0},
 	'resources':[{'name':'flowing water','daily amount':100000*24*3600,'daily consumption':0,'satisfaction rate':1}],
-	'wildlife':[{'name':'mosquitoes','number':500}]
+	'wildlife':[
+		{
+			'name':'mosquitoes',
+			'number':8000000,
+			'diseases':[
+				{
+					'name':'malaria',
+					'infected':0
+				}
+			]
+		}
+	]
 };
 
 function startLoop() {
@@ -54,7 +65,11 @@ function startLoop() {
 		stats.population.overall.diseases[0]['infection rate']=stats.population.overall.diseases[0].infected/stats.population.overall['total population'];
 		
 		stats.population.overall.diseases[0].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[0].infected)*
-		(1-Math.pow(0.9999999999,stats.population.overall.diseases[0].infected*stats.wildlife[0].number));
+		(1-Math.pow(0.9999999999,stats.wildlife[0].diseases[0].infected));
+		
+		stats.wildlife[0].diseases[0].infected*=(1-1/200);
+		stats.wildlife[0].diseases[0].infected+=(stats.wildlife[0]['number']-stats.wildlife[0].diseases[0].infected)*
+		(1-Math.pow(0.9999999999,stats.population.overall.diseases[0].infected));
 		
 		if (stats.resources[0]['daily consumption']<stats.resources[0]['daily amount']) {
 			stats.resources[0]['satisfaction rate']=1;
@@ -100,7 +115,7 @@ function startLoop() {
 		}
 		document.getElementById('time').innerHTML='Day '+stats.time.day+' Year '+stats.time.year;
 		document.getElementById('water').innerHTML='Water available: '+stats.resources[0]['daily amount']+', Water used: '+stats.resources[0]['daily consumption'];
-		document.getElementById('malaria').innerHTML='Malaria infections: '+stats.population.overall.diseases[0].infected;
+		document.getElementById('malaria').innerHTML='Malaria infections: '+stats.population.overall.diseases[0].infected+', Infected mosquitoes: '+stats.wildlife[0].diseases[0].infected;
 		document.getElementById('population').innerHTML=newAgeList;
 		
 	},1);
