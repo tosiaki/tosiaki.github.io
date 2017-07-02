@@ -70,7 +70,7 @@ function startLoop() {
 			stats.population.overall['total population']+=stats.population['by age'][age]['population'];
 		}
 		//Malaria
-		stats.population.overall.diseases[0].infected*=populationReduction*stats.population.overall.diseases[0]['death rate']/(1-stats.population.overall.diseases[0]['infection rate']*stats.population.overall.diseases[0]['death rate']);
+		stats.population.overall.diseases[0].infected*=populationReduction*(1-stats.population.overall.diseases[0]['death rate'])/(1-stats.population.overall.diseases[0]['infection rate']*stats.population.overall.diseases[0]['death rate']);
 		stats.population.overall.diseases[0]['infection rate']=stats.population.overall.diseases[0].infected/stats.population.overall['total population'];
 		
 		stats.population.overall.diseases[0].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[0].infected)*
@@ -81,14 +81,14 @@ function startLoop() {
 		(1-Math.pow(1-stats.population.overall.diseases[0]['transmission rate'],stats.population.overall.diseases[0].infected));
 		
 		//Tuberculosis
-		stats.population.overall.diseases[1].infected*=populationReduction*stats.population.overall.diseases[1]['death rate']/(1-stats.population.overall.diseases[1]['infection rate']*stats.population.overall.diseases[1]['death rate']);
+		stats.population.overall.diseases[1].infected*=populationReduction*(1-stats.population.overall.diseases[1]['death rate'])/(1-stats.population.overall.diseases[1]['infection rate']*stats.population.overall.diseases[1]['death rate']);
 		stats.population.overall.diseases[1]['infection rate']=stats.population.overall.diseases[1].infected/stats.population.overall['total population'];
 		
 		stats.population.overall.diseases[1].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[1].infected)*
 		(1-Math.pow(1-stats.population.overall.diseases[1]['transmission rate'],stats.population.overall.diseases[1].infected));
 		
 		//Measles
-		stats.population.overall.diseases[2].infected*=populationReduction*0.98*stats.population.overall.diseases[2]['death rate']/(1-stats.population.overall.diseases[2]['infection rate']*stats.population.overall.diseases[2]['death rate']);
+		stats.population.overall.diseases[2].infected*=populationReduction*0.98*(1-stats.population.overall.diseases[2]['death rate'])/(1-stats.population.overall.diseases[2]['infection rate']*stats.population.overall.diseases[2]['death rate']);
 		stats.population.overall.diseases[2]['infection rate']=stats.population.overall.diseases[2].infected/stats.population.overall['total population'];
 		
 		stats.population.overall.diseases[2].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[2].infected)*
