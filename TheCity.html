@@ -28,7 +28,7 @@ var stats={
 		'overall':{
 			'total population':0,
 			'diseases':[
-				{'name':'malaria','infected':100,'infection rate':0,'death rate':0.00004,'transmission rate':0.000000002},
+				{'name':'malaria','infected':100,'infection rate':0,'death rate':0.00004,'transmission rate':0.000000002,'immune population':0},
 				{'name':'tuberculosis','infected':100,'infection rate':0,'death rate':0.00005,'transmission rate':0.000000006},
 				{'name':'measles','infected':100,'infection rate':0,'death rate':0.0000001,'transmission rate':0.000004}
 			]
@@ -88,10 +88,15 @@ function startLoop() {
 		(1-Math.pow(1-stats.population.overall.diseases[1]['transmission rate'],stats.population.overall.diseases[1].infected));
 		
 		//Measles
+		stats.population.overall.diseases[2]['immune population']+=stats.population.overall.diseases[2].infected*0.02;
+		stats.population.overall.diseases[2]['immune population']*=populationReduction/(1-stats.population.overall.diseases[2]['infection rate']*stats.population.overall.diseases[2]['death rate']);
+		
 		stats.population.overall.diseases[2].infected*=populationReduction*0.98*(1-stats.population.overall.diseases[2]['death rate'])/(1-stats.population.overall.diseases[2]['infection rate']*stats.population.overall.diseases[2]['death rate']);
+		
+		
 		stats.population.overall.diseases[2]['infection rate']=stats.population.overall.diseases[2].infected/stats.population.overall['total population'];
 		
-		stats.population.overall.diseases[2].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[2].infected)*
+		stats.population.overall.diseases[2].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[2].infected-stats.population.overall.diseases[2]['immune population'])*
 		(1-Math.pow(1-stats.population.overall.diseases[2]['transmission rate'],stats.population.overall.diseases[2].infected));
 		
 		//Water
@@ -143,7 +148,7 @@ function startLoop() {
 		document.getElementById('water').innerHTML='Water available: '+stats.resources[0]['daily amount']+', Water used: '+stats.resources[0]['daily consumption'];
 		document.getElementById('malaria').innerHTML='Malaria infections: '+stats.population.overall.diseases[0].infected+', Infected mosquitoes: '+stats.wildlife[0].diseases[0].infected;
 		document.getElementById('tuberculosis').innerHTML='Tuberculosis infections: '+stats.population.overall.diseases[1].infected;
-		document.getElementById('measles').innerHTML='Measles infections: '+stats.population.overall.diseases[2].infected;
+		document.getElementById('measles').innerHTML='Measles infections: '+stats.population.overall.diseases[2].infected+', Number immune: '+stats.population.overall.diseases[2]['immune population'];
 		document.getElementById('population').innerHTML=newAgeList;
 		
 	},1);
