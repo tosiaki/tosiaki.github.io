@@ -28,9 +28,9 @@ var stats={
 		'overall':{
 			'total population':0,
 			'diseases':[
-				{'name':'malaria','infected':100,'infection rate':0,'death rate':0.00002,'transmission rate':0.0000000005},
-				{'name':'tuberculosis','infected':100,'infection rate':0,'death rate':0.00003,'transmission rate':0.0000000004},
-				{'name':'measles','infected':100,'infection rate':0,'death rate':0.0000001,'transmission rate':0.000005}
+				{'name':'malaria','infected':100,'infection rate':0,'death rate':0.00004,'transmission rate':0.0000000005},
+				{'name':'tuberculosis','infected':100,'infection rate':0,'death rate':0.00006,'transmission rate':0.0000000004},
+				{'name':'measles','infected':100,'infection rate':0,'death rate':0.0000001,'transmission rate':0.000001}
 			]
 		}
 	},
@@ -102,9 +102,11 @@ function startLoop() {
 			stats.resources[0]['satisfaction rate']=stats.resources[0]['daily amount']/stats.resources[0]['daily consumption'];
 		}
 		
+		//remove nonexistent population ages
 		while(stats.population['by age'][stats.population['by age'].length-1]['population']<0.5) {
 			stats.population['by age'].pop();
 		}
+		//births
 		for (var age=15;age<50;age++) {
 			stats.population['by age'][0]['population']+=(stats.population['by age'][age]['fertility']*stats.population['by age'][age]['population']/1000/5/365);
 		}
