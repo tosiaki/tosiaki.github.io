@@ -28,7 +28,7 @@ var stats={
 		'overall':{
 			'total population':0,
 			'diseases':[
-				{'name':'malaria','infected':100,'infection rate':0}
+				{'name':'malaria','infected':100,'infection rate':0,'death rate':0.0001}
 			]
 		}
 	},
@@ -56,12 +56,12 @@ function startLoop() {
 		for (var age=0;age<stats.population['by age'].length;age++) {
 			//stats.population['by age'][age]['population']=stats.population['by age'][age]['population']*Math.pow(1-Math.min(0.0003*Math.pow(1.07,age),1),1/(365*5));
 			stats.population['by age'][age]['population']*=stats.resources[0]['satisfaction rate'];
-			stats.population['by age'][age]['population']-=stats.population['by age'][age]['population']*stats.population.overall.diseases[0]['infection rate']*0.0001;
+			stats.population['by age'][age]['population']-=stats.population['by age'][age]['population']*stats.population.overall.diseases[0]['infection rate']*stats.population.overall.diseases[0]['death rate'];
 			
 			stats.resources[0]['daily consumption']+=stats.population['by age'][age]['population']*0.08;
 			stats.population.overall['total population']+=stats.population['by age'][age]['population'];
 		}
-		stats.population.overall.diseases[0].infected-=stats.population.overall.diseases[0].infected*0.00001;
+		stats.population.overall.diseases[0].infected-=stats.population.overall.diseases[0].infected*stats.population.overall.diseases[0]['death rate'];
 		stats.population.overall.diseases[0]['infection rate']=stats.population.overall.diseases[0].infected/stats.population.overall['total population'];
 		
 		stats.population.overall.diseases[0].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[0].infected)*
