@@ -28,8 +28,8 @@ var stats={
 		'overall':{
 			'total population':0,
 			'diseases':[
-				{'name':'malaria','infected':100,'infection rate':0,'death rate':0.0001},
-				{'name':'tuberculosis','infected':100,'infection rate':0,'death rate':0.0001}
+				{'name':'malaria','infected':100,'infection rate':0,'death rate':0.0001,'transmission rate':0.000000005},
+				{'name':'tuberculosis','infected':100,'infection rate':0,'death rate':0.0001,'transmission rate':0.000000004}
 			]
 		}
 	},
@@ -72,18 +72,18 @@ function startLoop() {
 		stats.population.overall.diseases[0]['infection rate']=stats.population.overall.diseases[0].infected/stats.population.overall['total population'];
 		
 		stats.population.overall.diseases[0].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[0].infected)*
-		(1-Math.pow(0.999999995,stats.wildlife[0].diseases[0].infected));
+		(1-Math.pow(1-stats.population.overall.diseases[0]['transmission rate'],stats.wildlife[0].diseases[0].infected));
 		
 		stats.wildlife[0].diseases[0].infected*=(1-1/200);
 		stats.wildlife[0].diseases[0].infected+=(stats.wildlife[0]['number']-stats.wildlife[0].diseases[0].infected)*
-		(1-Math.pow(0.999999995,stats.population.overall.diseases[0].infected));
+		(1-Math.pow(1-stats.population.overall.diseases[0]['transmission rate'],stats.population.overall.diseases[0].infected));
 		
 		//Tuberculosis
 		stats.population.overall.diseases[1].infected*=populationReduction;
 		stats.population.overall.diseases[1]['infection rate']=stats.population.overall.diseases[1].infected/stats.population.overall['total population'];
 		
 		stats.population.overall.diseases[1].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[1].infected)*
-		(1-Math.pow(0.999999998,stats.population.overall.diseases[1].infected));
+		(1-Math.pow(1-stats.population.overall.diseases[1]['transmission rate'],stats.population.overall.diseases[1].infected));
 		
 		//Water
 		if (stats.resources[0]['daily consumption']<stats.resources[0]['daily amount']) {
