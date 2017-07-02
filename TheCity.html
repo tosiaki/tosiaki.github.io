@@ -29,6 +29,7 @@ var stats={
 			'total population':0,
 			'diseases':[
 				{'name':'malaria','infected':100,'infection rate':0,'death rate':0.0001}
+				{'name':'tuberculosis','infected':100,'infection rate':0,'death rate':0.0001}
 			]
 		}
 	},
@@ -51,17 +52,23 @@ var stats={
 function startLoop() {
 	setInterval(function(){
 		
+		var populationReduction;
 		stats.resources[0]['daily consumption']=0;
 		stats.population.overall['total population']=0;
 		for (var age=0;age<stats.population['by age'].length;age++) {
 			//stats.population['by age'][age]['population']=stats.population['by age'][age]['population']*Math.pow(1-Math.min(0.0003*Math.pow(1.07,age),1),1/(365*5));
-			stats.population['by age'][age]['population']*=stats.resources[0]['satisfaction rate'];
-			stats.population['by age'][age]['population']-=stats.population['by age'][age]['population']*stats.population.overall.diseases[0]['infection rate']*stats.population.overall.diseases[0]['death rate'];
+			
+			populationReduction=stats.resources[0]['satisfaction rate']*
+			(1-stats.population.overall.diseases[0]['infection rate']*stats.population.overall.diseases[0]['death rate'])*
+			(1-stats.population.overall.diseases[1]['infection rate']*stats.population.overall.diseases[1]['death rate']);
+			
+			stats.population['by age'][age]['population']*=populationReduction;
 			
 			stats.resources[0]['daily consumption']+=stats.population['by age'][age]['population']*0.08;
 			stats.population.overall['total population']+=stats.population['by age'][age]['population'];
 		}
-		stats.population.overall.diseases[0].infected-=stats.population.overall.diseases[0].infected*stats.population.overall.diseases[0]['death rate'];
+		//Malaria
+		stats.population.overall.diseases[0].infected*=populationReduction;
 		stats.population.overall.diseases[0]['infection rate']=stats.population.overall.diseases[0].infected/stats.population.overall['total population'];
 		
 		stats.population.overall.diseases[0].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[0].infected)*
@@ -71,6 +78,14 @@ function startLoop() {
 		stats.wildlife[0].diseases[0].infected+=(stats.wildlife[0]['number']-stats.wildlife[0].diseases[0].infected)*
 		(1-Math.pow(0.999999995,stats.population.overall.diseases[0].infected));
 		
+		//Tuberculosis
+		stats.population.overall.diseases[1].infected*=populationReduction;
+		stats.population.overall.diseases[1]['infection rate']=stats.population.overall.diseases[1].infected/stats.population.overall['total population'];
+		
+		stats.population.overall.diseases[1].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[1].infected)*
+		(1-Math.pow(0.999999998,stats.population.overall.diseases[1].infected));
+		
+		//Water
 		if (stats.resources[0]['daily consumption']<stats.resources[0]['daily amount']) {
 			stats.resources[0]['satisfaction rate']=1;
 		}
@@ -116,6 +131,7 @@ function startLoop() {
 		document.getElementById('time').innerHTML='Day '+stats.time.day+' Year '+stats.time.year;
 		document.getElementById('water').innerHTML='Water available: '+stats.resources[0]['daily amount']+', Water used: '+stats.resources[0]['daily consumption'];
 		document.getElementById('malaria').innerHTML='Malaria infections: '+stats.population.overall.diseases[0].infected+', Infected mosquitoes: '+stats.wildlife[0].diseases[0].infected;
+		document.getElementById('tuberculosis').innerHTML='Tuberculosis infections: '+stats.population.overall.diseases[1].infected;
 		document.getElementById('population').innerHTML=newAgeList;
 		
 	},1);
@@ -129,6 +145,7 @@ window.onload=startLoop();
 <p id="time"></p>
 <p id="water"></p>
 <p id="malaria"></p>
+<p id="tuberculosis"></p>
 
 <ul id="population">
 </ul>
