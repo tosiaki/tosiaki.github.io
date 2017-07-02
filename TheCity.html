@@ -141,7 +141,7 @@ function startLoop() {
 		document.getElementById('water').innerHTML='Water available: '+stats.resources[0]['daily amount']+', Water used: '+stats.resources[0]['daily consumption'];
 		document.getElementById('malaria').innerHTML='Malaria infections: '+stats.population.overall.diseases[0].infected+', Infected mosquitoes: '+stats.wildlife[0].diseases[0].infected;
 		document.getElementById('tuberculosis').innerHTML='Tuberculosis infections: '+stats.population.overall.diseases[1].infected;
-		document.getElementById('tuberculosis').innerHTML='Measles infections: '+stats.population.overall.diseases[2].infected;
+		document.getElementById('measles').innerHTML='Measles infections: '+stats.population.overall.diseases[2].infected;
 		document.getElementById('population').innerHTML=newAgeList;
 		
 	},1);
