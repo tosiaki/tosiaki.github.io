@@ -71,7 +71,7 @@ var stats={
 				}
 			]
 		}
-	]
+	],
 	'stock':{
 		'fig':0,
 		'olive':0,
@@ -189,6 +189,7 @@ function startLoop() {
 		}
 		document.getElementById('time').innerHTML='Day '+stats.time.day+' Year '+stats.time.year;
 		document.getElementById('water').innerHTML='Water available: '+stats.resources[0]['daily amount']+', Water used: '+stats.resources[0]['daily consumption'];
+		document.getElementById('fig').innerHTML='Figs: '+stats.stock.fig;
 		document.getElementById('malaria').innerHTML='Malaria infections: '+stats.population.overall.diseases[0].infected+', Infected mosquitoes: '+stats.wildlife[0].diseases[0].infected;
 		document.getElementById('tuberculosis').innerHTML='Tuberculosis infections: '+stats.population.overall.diseases[1].infected+', Number immune: '+stats.population.overall.diseases[1]['immune population'];
 		document.getElementById('measles').innerHTML='Measles infections: '+stats.population.overall.diseases[2].infected+', Number immune: '+stats.population.overall.diseases[2]['immune population'];
