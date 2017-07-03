@@ -18,8 +18,32 @@ function fertilitybyage(age) {
 	else return 0;
 }
 
+function musclebyage(age) {
+	if (age<16) {
+		return age*2;
+	}
+	if (age>15 && age<41) {
+		return 30+(age-15)*4;
+	}
+	if (age>40 && age<86) {
+		return 130-(age-40)*130/45;
+	}
+	else return 0;
+}
+
 for (var i=0; i<=50; i++) {
-	initPop.push({'age':i,'population':100,'fertility':fertilitybyage(i),'age specific diseases':[]});
+	initPop.push({
+		'age':i,
+		'population':100,
+		'fertility':fertilitybyage(i),
+		'age specific diseases':[],
+		'muscle':musclebyage(i),
+		'skills':{
+			'gathering':[
+				{'level':0,'population':100}
+			]
+		}
+	});
 }
 
 var stats={
@@ -35,7 +59,7 @@ var stats={
 		}
 	},
 	'time':{'division':0,'day':0,'year':0},
-	'resources':[{'name':'flowing water','daily amount':100000*24*3600,'daily consumption':0,'satisfaction rate':1}],
+	'resources':[{'name':'flowing water','daily amount':100000*24*3600,'daily consumption':0,'satisfaction rate':1},{'name':'fig','amount':500},{'name':'olive','amount':500},{'name':'plum','amount':500},{'name':'pear','amount':500},{'name':'berry','amount':500},{'name':'grape','amount':500},{'name':'apple','amount':500},{'name':'orange','amount':500}],
 	'wildlife':[
 		{
 			'name':'mosquitoes',
@@ -48,6 +72,16 @@ var stats={
 			]
 		}
 	]
+	'stock':{
+		'fig':0,
+		'olive':0,
+		'plum':0,
+		'pear':0,
+		'berry':0,
+		'grape':0,
+		'apple':0,
+		'orange':0
+	}
 };
 
 function startLoop() {
@@ -68,6 +102,12 @@ function startLoop() {
 			
 			stats.resources[0]['daily consumption']+=stats.population['by age'][age]['population']*0.08;
 			stats.population.overall['total population']+=stats.population['by age'][age]['population'];
+			
+			var gatheringPower;
+			for (var i=0;i<stats.population['by age'][age].skills.gathering.length,i++) {
+				gatheringPower+=stats.population['by age'][age].skills.gathering[i].level*stats.population['by age'][age].skills.Math.sqrt(gathering[i]+1).population;
+			}
+			stats.stock.fig+=stats.resource[1].amount*(1-Math.pow(1-1/stats.resource[1].amount,gatheringPower*stats.population['by age'][age].muscle));
 		}
 		//Malaria
 		stats.population.overall.diseases[0].infected*=populationReduction*(1-stats.population.overall.diseases[0]['death rate'])/(1-stats.population.overall.diseases[0]['infection rate']*stats.population.overall.diseases[0]['death rate']);
@@ -164,6 +204,7 @@ window.onload=startLoop();
 <body>
 <p id="time"></p>
 <p id="water"></p>
+<p id="fig"></p>
 <p id="malaria"></p>
 <p id="tuberculosis"></p>
 <p id="measles"></p>
