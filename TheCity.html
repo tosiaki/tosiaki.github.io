@@ -108,7 +108,7 @@ function startLoop() {
 				gatheringPower+=stats.population['by age'][age].skills.gathering[i].level*Math.sqrt(stats.population['by age'][age].skills.gathering[i]+1).population;
 			}
 			stats.stock.fig+=stats.resources[1].amount*(1-Math.pow(1-1/stats.resources[1].amount,gatheringPower*stats.population['by age'][age].muscle));
-			console.log(stats.resources[1].amount*(1-Math.pow(1-1/stats.resources[1].amount,gatheringPower*stats.population['by age'][age].muscle);
+			console.log(stats.resources[1].amount*(1-Math.pow(1-1/stats.resources[1].amount,gatheringPower*stats.population['by age'][age].muscle)));
 		}
 		//Malaria
 		stats.population.overall.diseases[0].infected*=populationReduction*(1-stats.population.overall.diseases[0]['death rate'])/(1-stats.population.overall.diseases[0]['infection rate']*stats.population.overall.diseases[0]['death rate']);
