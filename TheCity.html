@@ -172,7 +172,7 @@ function startLoop() {
 				stats.time.year++;
 				for (var age=stats.population['by age'].length;age>0;age--) {
 					if (stats.population['by age'][age]==null && stats.population['by age'][age-1]!=null) {
-						stats.population['by age'].push({'age':age,'population':stats.population['by age'][age-1]['population'],'fertility':fertilitybyage(age)});
+						stats.population['by age'].push({'age':age,'population':stats.population['by age'][age-1]['population'],'fertility':fertilitybyage(age),'age specific diseases':[],'muscle':musclebyage(i),'skills':{'gathering':[{'level':0,'population':100}]}});
 					}
 					else {
 						stats.population['by age'][age]['population']=stats.population['by age'][age-1]['population'];
