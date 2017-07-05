@@ -40,107 +40,155 @@ for (var i=0; i<=50; i++) {
 		'muscle':musclebyage(i),
 		'skills':{
 			'gathering':[
-				{'level':0,'population':100}
+				{'level':0,'population':1000}
 			]
 		}
 	});
 }
 
+
 var stats={
 	'population':{
 		'by age':initPop,
-		'overall':{
-			'total population':0,
-			'diseases':[
-				{'name':'malaria','infected':100,'infection rate':0,'death rate':0.00004,'transmission rate':0.000000002},
-				{'name':'tuberculosis','infected':100,'infection rate':0,'death rate':0.00005,'immunity rate':0.0000212,'transmission rate':0.000000009,'immune population':0},
-				{'name':'measles','infected':100,'infection rate':0,'death rate':0.0000001,'immunity rate':0.02,'transmission rate':0.002,'immune population':0}
-			]
-		}
+		'totalPopulation':0,
+		'diseases':{
+			'malaria':{'name':'Malaria','infected':100,'infectionRate':0,'deathRate':0.00004,'transmissionRate':0.000000002},
+			'tuberculosis':{'name':'Tuberculosis','infected':100,'infectionRate':0,'deathRate':0.00005,'immunityRate':0.0000212,'transmissionRate':0.000000009,'immunePopulation':0},
+			'measles':{'name':'Measles','infected':100,'infectionRate':0,'deathRate':0.0000001,'immunityRate':0.02,'transmissionRate':0.002,'immunePopulation':0}
+		},
+		'consumptionRatio':0.1
 	},
 	'time':{'division':0,'day':0,'year':0},
-	'resources':[{'name':'flowing water','daily amount':100000*24*3600,'daily consumption':0,'satisfaction rate':1},{'name':'fig','amount':500},{'name':'olive','amount':500},{'name':'plum','amount':500},{'name':'pear','amount':500},{'name':'berry','amount':500},{'name':'grape','amount':500},{'name':'apple','amount':500},{'name':'orange','amount':500}],
-	'wildlife':[
-		{
-			'name':'mosquitoes',
+	'resources':[{'name':'flowing water','daily amount':100000*24*3600,'daily consumption':0,'satisfaction rate':1},{'name':'fig','amount':10000,'calories':250},{'name':'olive','amount':500000,'calories':4},{'name':'plum','amount':5000,'calories':46},{'name':'pear','amount':50000,'calories':102},{'name':'raspberry','amount':50000,'calories':65},{'name':'grape','amount':5000,'calories':62},{'name':'apple','amount':50000,'calories':95},{'name':'orange','amount':50000,'calories':45}],
+	'wildlife':{
+		'mosquitoes': {
+			'name':'Mosquitoes',
 			'number':8000000,
-			'diseases':[
-				{
-					'name':'malaria',
+			'diseases':{
+				'malaria': {
+					'name':'Malaria',
 					'infected':0
 				}
-			]
+			}
 		}
-	],
+	},
 	'stock':{
-		'fig':0,
+		'fig':10000000,
 		'olive':0,
 		'plum':0,
 		'pear':0,
-		'berry':0,
+		'raspberry':0,
 		'grape':0,
 		'apple':0,
 		'orange':0
 	}
 };
 
+function diseaseReduction(disease) {
+	return 1-disease.infectionRate*disease.deathRate;
+}
+function diseaseTotalReduction(diseases) {
+	var result=1;
+	for (var disease in diseases) {
+		result*=diseaseReduction(diseases[disease]);
+	}
+	return result;
+}
+
 function startLoop() {
 	setInterval(function(){
 		
-		var populationReduction;
+		var populationReduction=stats.resources[0]['satisfaction rate']*
+			Math.min(1/stats.population.consumptionRatio,1)*
+			diseaseTotalReduction(stats.population.diseases);
+			
 		stats.resources[0]['daily consumption']=0;
-		stats.population.overall['total population']=0;
+		stats.population.totalPopulation=0;
+		var gatheringPower=0;
 		for (var age=0;age<stats.population['by age'].length;age++) {
 			//stats.population['by age'][age]['population']=stats.population['by age'][age]['population']*Math.pow(1-Math.min(0.0003*Math.pow(1.07,age),1),1/(365*5));
-			
-			populationReduction=stats.resources[0]['satisfaction rate']*
-			(1-stats.population.overall.diseases[0]['infection rate']*stats.population.overall.diseases[0]['death rate'])*
-			(1-stats.population.overall.diseases[1]['infection rate']*stats.population.overall.diseases[1]['death rate'])*
-			(1-stats.population.overall.diseases[2]['infection rate']*stats.population.overall.diseases[2]['death rate']);
 			
 			stats.population['by age'][age]['population']*=populationReduction;
 			
 			stats.resources[0]['daily consumption']+=stats.population['by age'][age]['population']*0.08;
-			stats.population.overall['total population']+=stats.population['by age'][age]['population'];
+			stats.population.totalPopulation+=stats.population['by age'][age]['population'];
 			
-			var gatheringPower;
 			for (var i=0;i<stats.population['by age'][age].skills.gathering.length;i++) {
-				gatheringPower+=stats.population['by age'][age].skills.gathering[i].level*Math.sqrt(stats.population['by age'][age].skills.gathering[i]+1).population;
+				gatheringPower+=stats.population['by age'][age].skills.gathering[i].population*Math.sqrt(stats.population['by age'][age].skills.gathering[i].level*stats.population['by age'][age].muscle+1);
 			}
-			stats.stock.fig+=stats.resources[1].amount*(1-Math.pow(1-1/stats.resources[1].amount,gatheringPower*stats.population['by age'][age].muscle));
+		}
+		stats.stock.fig+=stats.resources[1].amount*(1-Math.pow(1-1/stats.resources[1].amount,gatheringPower));
+		stats.stock.olive+=stats.resources[2].amount*(1-Math.pow(1-1/stats.resources[2].amount,gatheringPower));
+		stats.stock.plum+=stats.resources[3].amount*(1-Math.pow(1-1/stats.resources[3].amount,gatheringPower));
+		stats.stock.pear+=stats.resources[4].amount*(1-Math.pow(1-1/stats.resources[4].amount,gatheringPower));
+		stats.stock.raspberry+=stats.resources[5].amount*(1-Math.pow(1-1/stats.resources[5].amount,gatheringPower));
+		stats.stock.grape+=stats.resources[6].amount*(1-Math.pow(1-1/stats.resources[6].amount,gatheringPower));
+		stats.stock.apple+=stats.resources[7].amount*(1-Math.pow(1-1/stats.resources[7].amount,gatheringPower));
+		stats.stock.orange+=stats.resources[8].amount*(1-Math.pow(1-1/stats.resources[8].amount,gatheringPower));
+		
+		var caloricNeeds=stats.population.totalPopulation*2000;
+		var caloricStock=
+			stats.resources[1].calories*stats.stock.fig+
+			stats.resources[2].calories*stats.stock.olive+
+			stats.resources[3].calories*stats.stock.plum+
+			stats.resources[4].calories*stats.stock.pear+
+			stats.resources[5].calories*stats.stock.raspberry+
+			stats.resources[6].calories*stats.stock.grape+
+			stats.resources[7].calories*stats.stock.apple+
+			stats.resources[8].calories*stats.stock.orange;
+		if (caloricStock!=0) {
+			stats.population.consumptionRatio=caloricNeeds/caloricStock;
+		}
+		else {
+			stats.population.consumptionRatio=10000000000000000000000000000000000000000;
+			debugger;
+		}
+		
+		if (stats.population.consumptionRatio<=1) {
+			stats.stock.fig*=(1-stats.population.consumptionRatio);
+			stats.stock.olive*=(1-stats.population.consumptionRatio);
+			stats.stock.plum*=(1-stats.population.consumptionRatio);
+			stats.stock.pear*=(1-stats.population.consumptionRatio);
+			stats.stock.raspberry*=(1-stats.population.consumptionRatio);
+			stats.stock.grape*=(1-stats.population.consumptionRatio);
+			stats.stock.apple*=(1-stats.population.consumptionRatio);
+			stats.stock.orange*=(1-stats.population.consumptionRatio);
+		}
+		else {
+			stats.stock.fig=0;
 		}
 		//Malaria
-		stats.population.overall.diseases[0].infected*=populationReduction*(1-stats.population.overall.diseases[0]['death rate'])/(1-stats.population.overall.diseases[0]['infection rate']*stats.population.overall.diseases[0]['death rate']);
-		stats.population.overall.diseases[0]['infection rate']=stats.population.overall.diseases[0].infected/stats.population.overall['total population'];
+		stats.population.diseases.malaria.infected*=populationReduction*(1-stats.population.diseases.malaria.deathRate)/(1-stats.population.diseases.malaria.infectionRate*stats.population.diseases.malaria.deathRate);
 		
-		stats.population.overall.diseases[0].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[0].infected)*
-		(1-Math.pow(1-stats.population.overall.diseases[0]['transmission rate'],stats.wildlife[0].diseases[0].infected));
+		stats.population.diseases.malaria.infected+=(stats.population.totalPopulation-stats.population.diseases.malaria.infected)*
+		(1-Math.pow(1-stats.population.diseases.malaria.transmissionRate,stats.wildlife.mosquitoes.diseases.malaria.infected));
 		
-		stats.wildlife[0].diseases[0].infected*=(1-1/200);
-		stats.wildlife[0].diseases[0].infected+=(stats.wildlife[0]['number']-stats.wildlife[0].diseases[0].infected)*
-		(1-Math.pow(1-stats.population.overall.diseases[0]['transmission rate'],stats.population.overall.diseases[0].infected));
+		stats.wildlife.mosquitoes.diseases.malaria.infected*=(1-1/200);
+		stats.wildlife.mosquitoes.diseases.malaria.infected+=(stats.wildlife.mosquitoes.number-stats.wildlife.mosquitoes.diseases.malaria.infected)*
+		(1-Math.pow(1-stats.population.diseases.malaria.transmissionRate,stats.population.diseases.malaria.infected));
 		
 		//Tuberculosis
-		stats.population.overall.diseases[1]['immune population']+=stats.population.overall.diseases[1].infected*stats.population.overall.diseases[1]['immunity rate'];
-		stats.population.overall.diseases[1]['immune population']*=populationReduction/(1-stats.population.overall.diseases[1]['infection rate']*stats.population.overall.diseases[1]['death rate']);
+		stats.population.diseases.tuberculosis.immunePopulation+=stats.population.diseases.tuberculosis.infected*stats.population.diseases.tuberculosis.immunityRate;
+		stats.population.diseases.tuberculosis.immunePopulation*=populationReduction/(1-stats.population.diseases.tuberculosis.infectionRate*stats.population.diseases.tuberculosis.deathRate);
+
+		stats.population.diseases.tuberculosis.infected*=populationReduction*(1-stats.population.diseases.tuberculosis.immunityRate)*(1-stats.population.diseases.tuberculosis.deathRate)/(1-stats.population.diseases.tuberculosis.infectionRate*stats.population.diseases.tuberculosis.deathRate);
 		
-		stats.population.overall.diseases[1].infected*=populationReduction*(1-stats.population.overall.diseases[1]['immunity rate'])*(1-stats.population.overall.diseases[1]['death rate'])/(1-stats.population.overall.diseases[1]['infection rate']*stats.population.overall.diseases[1]['death rate']);
-		stats.population.overall.diseases[1]['infection rate']=stats.population.overall.diseases[1].infected/stats.population.overall['total population'];
-		
-		stats.population.overall.diseases[1].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[1].infected-stats.population.overall.diseases[1]['immune population'])*
-		(1-Math.pow(1-stats.population.overall.diseases[1]['transmission rate'],stats.population.overall.diseases[1].infected));
+		stats.population.diseases.tuberculosis.infected+=(stats.population.totalPopulation-stats.population.diseases.tuberculosis.infected-stats.population.diseases.tuberculosis.immunePopulation)*
+		(1-Math.pow(1-stats.population.diseases.tuberculosis.transmissionRate,stats.population.diseases.tuberculosis.infected));
 		
 		//Measles
-		stats.population.overall.diseases[2]['immune population']+=stats.population.overall.diseases[2].infected*stats.population.overall.diseases[2]['immunity rate'];
-		stats.population.overall.diseases[2]['immune population']*=populationReduction/(1-stats.population.overall.diseases[2]['infection rate']*stats.population.overall.diseases[2]['death rate']);
+		stats.population.diseases.measles.immunePopulation+=stats.population.diseases.measles.infected*stats.population.diseases.measles.immunityRate;
+		stats.population.diseases.measles.immunePopulation*=populationReduction/(1-stats.population.diseases.measles.infectionRate*stats.population.diseases.measles.deathRate);
 		
-		stats.population.overall.diseases[2].infected*=populationReduction*(1-stats.population.overall.diseases[2]['immunity rate'])*(1-stats.population.overall.diseases[2]['death rate'])/(1-stats.population.overall.diseases[2]['infection rate']*stats.population.overall.diseases[2]['death rate']);
+		stats.population.diseases.measles.infected*=populationReduction*(1-stats.population.diseases.measles.immunityRate)*(1-stats.population.diseases.measles.deathRate)/(1-stats.population.diseases.measles.infectionRate*stats.population.diseases.measles.deathRate);
 		
 		
-		stats.population.overall.diseases[2]['infection rate']=stats.population.overall.diseases[2].infected/stats.population.overall['total population'];
+		stats.population.diseases.measles.infected+=(stats.population.totalPopulation-stats.population.diseases.measles.infected-stats.population.diseases.measles.immunePopulation)*
+		(1-Math.pow(1-stats.population.diseases.measles.transmissionRate,stats.population.diseases.measles.infected));
 		
-		stats.population.overall.diseases[2].infected+=(stats.population.overall['total population']-stats.population.overall.diseases[2].infected-stats.population.overall.diseases[2]['immune population'])*
-		(1-Math.pow(1-stats.population.overall.diseases[2]['transmission rate'],stats.population.overall.diseases[2].infected));
+		for (var disease in stats.population.diseases) {
+			stats.population.diseases[disease].infectionRate=stats.population.diseases[disease].infected/stats.population.totalPopulation;
+		}
 		
 		//Water
 		if (stats.resources[0]['daily consumption']<stats.resources[0]['daily amount']) {
@@ -151,7 +199,7 @@ function startLoop() {
 		}
 		
 		//remove nonexistent population ages
-		while(stats.population['by age'][stats.population['by age'].length-1]['population']<0.5) {
+		while(stats.population['by age'][stats.population['by age'].length-1]['population']<0.5 && stats.population['by age'].length>50) {
 			stats.population['by age'].pop();
 		}
 		//births
@@ -183,16 +231,26 @@ function startLoop() {
 		}
 		
 		var newAgeList='';
-		newAgeList+='<li>Total: '+stats.population.overall['total population']+'</li>';
+		newAgeList+='<li>Total: '+Math.round(stats.population.totalPopulation)+'</li>';
 		for (var age=0;age<stats.population['by age'].length;age++) {
 			newAgeList+='<li>Age '+age+': '+Math.round(stats.population['by age'][age]['population'])+'</li>';
 		}
 		document.getElementById('time').innerHTML='Day '+stats.time.day+' Year '+stats.time.year;
-		document.getElementById('water').innerHTML='Water available: '+stats.resources[0]['daily amount']+', Water used: '+stats.resources[0]['daily consumption'];
-		document.getElementById('fig').innerHTML='Figs: '+stats.stock.fig;
-		document.getElementById('malaria').innerHTML='Malaria infections: '+stats.population.overall.diseases[0].infected+', Infected mosquitoes: '+stats.wildlife[0].diseases[0].infected;
-		document.getElementById('tuberculosis').innerHTML='Tuberculosis infections: '+stats.population.overall.diseases[1].infected+', Number immune: '+stats.population.overall.diseases[1]['immune population'];
-		document.getElementById('measles').innerHTML='Measles infections: '+stats.population.overall.diseases[2].infected+', Number immune: '+stats.population.overall.diseases[2]['immune population'];
+		document.getElementById('water').innerHTML='Water available: '+stats.resources[0]['daily amount']+', Water used: '+Math.round(stats.resources[0]['daily consumption']);
+		var foodList=
+			'<li>Figs:'+Math.round(stats.resources[1].calories*stats.stock.fig)+'</li>'+
+			'<li>Olive:'+Math.round(stats.resources[2].calories*stats.stock.olive)+'</li>'+
+			'<li>Plum:'+Math.round(stats.resources[3].calories*stats.stock.plum)+'</li>'+
+			'<li>Pear:'+Math.round(stats.resources[4].calories*stats.stock.pear)+'</li>'+
+			'<li>Raspberry:'+Math.round(stats.resources[5].calories*stats.stock.raspberry)+'</li>'+
+			'<li>Grape:'+Math.round(stats.resources[6].calories*stats.stock.grape)+'</li>'+
+			'<li>Apple:'+Math.round(stats.resources[7].calories*stats.stock.apple)+'</li>'+
+			'<li>Orange:'+Math.round(stats.resources[8].calories*stats.stock.orange)+'</li>';
+		
+		document.getElementById('food').innerHTML=foodList;
+		document.getElementById('malaria').innerHTML='Malaria infections: '+Math.round(stats.population.diseases.malaria.infected)+', Infected mosquitoes: '+Math.round(stats.wildlife.mosquitoes.diseases.malaria.infected);
+		document.getElementById('tuberculosis').innerHTML='Tuberculosis infections: '+Math.round(stats.population.diseases.tuberculosis.infected)+', Number immune: '+Math.round(stats.population.diseases.tuberculosis.immunePopulation);
+		document.getElementById('measles').innerHTML='Measles infections: '+Math.round(stats.population.diseases.measles.infected)+', Number immune: '+Math.round(stats.population.diseases.measles.immunePopulation);
 		document.getElementById('population').innerHTML=newAgeList;
 		
 	},1);
@@ -205,7 +263,7 @@ window.onload=startLoop();
 <body>
 <p id="time"></p>
 <p id="water"></p>
-<p id="fig"></p>
+<ul id="food"></ul>
 <p id="malaria"></p>
 <p id="tuberculosis"></p>
 <p id="measles"></p>
