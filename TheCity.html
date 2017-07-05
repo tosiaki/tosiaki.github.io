@@ -3,9 +3,8 @@
 <title>The City</title>
 <script>
 <!--
-var initPop=[];
 
-function fertilitybyage(age) {
+function fertilityByAge(age) {
 	if (age>15 && age<24) {
 		return (age-15)*250/8;
 	}
@@ -18,7 +17,7 @@ function fertilitybyage(age) {
 	else return 0;
 }
 
-function musclebyage(age) {
+function muscleByAge(age) {
 	if (age<16) {
 		return age*2;
 	}
@@ -31,27 +30,41 @@ function musclebyage(age) {
 	else return 0;
 }
 
+function gatheringLearningByAge(age){
+	if (age>=5 && age<20) {
+		return (age-5);
+	}
+	if (age>=20 && age<50) {
+		return 15;
+	}
+	if (age>=50 && age<80) {
+		return 15-(age-50)*15/30;
+	}
+	else return 0;
+}
+
+var initPop=[];
 for (var i=0; i<=50; i++) {
 	initPop.push({
 		'age':i,
 		'population':100,
-		'fertility':fertilitybyage(i),
 		'age specific diseases':[],
-		'muscle':musclebyage(i),
 		'skills':{
 			'gathering':[
-				{'level':0,'population':1000}
+				{'level':0,'population':100}
 			]
 		}
 	});
+	initPop[0].population=0;
 }
 
 
 var stats={
 	'time':{'division':0,'day':0,'year':0},
 	'population':{
-		'by age':initPop,
+		'byAge':initPop,
 		'totalPopulation':0,
+		'topAge':50,
 		'diseases':{
 			'malaria':{'name':'Malaria','infected':100,'infectionRate':0,'deathRate':0.00004,'transmissionRate':0.000000002},
 			'tuberculosis':{'name':'Tuberculosis','infected':100,'infectionRate':0,'deathRate':0.00005,'immunityRate':0.0000212,'transmissionRate':0.000000009,'immunePopulation':0},
@@ -67,8 +80,8 @@ var stats={
 	'resources':{
 		'water':{'name':'Water','available':0},
 		'food':{
-			'fig':{'name':'Fig','amount':100000,'calories':250,'stock':10000000},
-			'olive':{'name':'Plive','amount':500000,'calories':4,'stock':0},
+			'fig':{'name':'Fig','amount':100000,'calories':250,'stock':0},
+			'olive':{'name':'Olive','amount':500000,'calories':4,'stock':0},
 			'plum':{'name':'Plum','amount':50000,'calories':46,'stock':0},
 			'pear':{'name':'Pear','amount':40000,'calories':102,'stock':0},
 			'raspberry':{'name':'Raspberry','amount':30000,'calories':65,'stock':0},
@@ -116,17 +129,20 @@ function startLoop() {
 		stats.population.water.consumption=0;
 		stats.population.totalPopulation=0;
 		var gatheringPower=0;
-		for (var age=0;age<stats.population['by age'].length;age++) {
+		for (age=0;age<=stats.population.topAge;age++) {
 			//stats.population['by age'][age]['population']=stats.population['by age'][age]['population']*Math.pow(1-Math.min(0.0003*Math.pow(1.07,age),1),1/(365*5));
 			
-			stats.population['by age'][age]['population']*=populationReduction;
+			stats.population.byAge[age].population*=populationReduction;
 			
-			stats.population.water.consumption+=stats.population['by age'][age]['population']*0.08;
-			stats.population.totalPopulation+=stats.population['by age'][age]['population'];
-			
-			for (var i=0;i<stats.population['by age'][age].skills.gathering.length;i++) {
-				gatheringPower+=stats.population['by age'][age].skills.gathering[i].population*Math.sqrt(stats.population['by age'][age].skills.gathering[i].level*stats.population['by age'][age].muscle+1);
+			for (var i=0;i<stats.population.byAge[age].skills.gathering.length;i++) {
+				stats.population.byAge[age].skills.gathering[i].population*=populationReduction;
+				gatheringPower+=stats.population.byAge[age].skills.gathering[i].population*Math.sqrt((stats.population.byAge[age].skills.gathering[i].level+1)*muscleByAge(age));
+				
+				stats.population.byAge[age].skills.gathering[i].level+=gatheringLearningByAge(age);//skill up
 			}
+			
+			stats.population.water.consumption+=stats.population.byAge[age].population*0.08;
+			stats.population.totalPopulation+=stats.population.byAge[age].population;
 		}
 		stats.population.caloricNeeds=stats.population.totalPopulation*2000;
 		
@@ -140,7 +156,6 @@ function startLoop() {
 		}
 		else {
 			stats.population.consumptionRatio=10000000000000000000000000000000000000000;
-			debugger;
 		}
 		
 		if (stats.population.consumptionRatio<=1) {
@@ -183,7 +198,9 @@ function startLoop() {
 		(1-Math.pow(1-stats.population.diseases.measles.transmissionRate,stats.population.diseases.measles.infected));
 		
 		for (var disease in stats.population.diseases) {
-			stats.population.diseases[disease].infectionRate=stats.population.diseases[disease].infected/stats.population.totalPopulation;
+			if (stats.population.totalPopulation>0) {
+				stats.population.diseases[disease].infectionRate=stats.population.diseases[disease].infected/stats.population.totalPopulation;
+			}
 		}
 		
 		//Water
@@ -195,12 +212,18 @@ function startLoop() {
 		}
 		
 		//remove nonexistent population ages
-		while(stats.population['by age'][stats.population['by age'].length-1]['population']<0.5 && stats.population['by age'].length>50) {
-			stats.population['by age'].pop();
+		while(stats.population.byAge[stats.population.topAge].population<0.5 && stats.population.topAge>50) {
+			delete stats.population.byAge.pop();
+			stats.population.topAge--;
 		}
 		//births
 		for (var age=15;age<50;age++) {
-			stats.population['by age'][0]['population']+=(stats.population['by age'][age]['fertility']*stats.population['by age'][age]['population']/1000/5/365);
+			var increase=fertilityByAge(age)*stats.population.byAge[age].population/1000/5/365;
+			stats.population.byAge[0].population+=increase;
+			if (stats.population.byAge[0].skills.gathering[0].level>0) {
+				stats.population.byAge[0].skills.gathering.unshift({'level':0,'population':0});
+			}
+			stats.population.byAge[0].skills.gathering[0].population+=increase;
 		}
 	
 		if(stats.time.division<5) {
@@ -214,22 +237,19 @@ function startLoop() {
 			else {
 				stats.time.day=0;
 				stats.time.year++;
-				for (var age=stats.population['by age'].length;age>0;age--) {
-					if (stats.population['by age'][age]==null && stats.population['by age'][age-1]!=null) {
-						stats.population['by age'].push({'age':age,'population':stats.population['by age'][age-1]['population'],'fertility':fertilitybyage(age),'age specific diseases':[],'muscle':musclebyage(i),'skills':{'gathering':[{'level':0,'population':100}]}});
-					}
-					else {
-						stats.population['by age'][age]['population']=stats.population['by age'][age-1]['population'];
-					}
+				stats.population.byAge.unshift({'age':0,'population':0,'age specific diseases':[],'skills':{'gathering':[{'level':0,'population':0}]}});
+				stats.population.topAge++;
+				for (var age=1;age<=stats.population.topAge;age++) {
+					stats.population.byAge[age].age++;
 				}
-				stats.population['by age'][0]['population']=0;
+				stats.population.byAge[0].population=0;
 			}
 		}
 		
 		var newAgeList='';
 		newAgeList+='<li>Total: '+Math.round(stats.population.totalPopulation)+'</li>';
-		for (var age=0;age<stats.population['by age'].length;age++) {
-			newAgeList+='<li>Age '+age+': '+Math.round(stats.population['by age'][age]['population'])+'</li>';
+		for (var age=0;age<=stats.population.topAge;age++) {
+			newAgeList+='<li>Age '+age+': '+Math.round(stats.population.byAge[age].population)+'</li>';
 		}
 		document.getElementById('time').innerHTML='Day '+stats.time.day+' Year '+stats.time.year;
 		document.getElementById('water').innerHTML='Water available: '+stats.environment.river.flow+', Water used: '+Math.round(stats.population.water.consumption);
