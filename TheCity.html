@@ -213,7 +213,7 @@ function startLoop() {
 		
 		//remove nonexistent population ages
 		while(stats.population.byAge[stats.population.topAge].population<0.5 && stats.population.topAge>50) {
-			delete stats.population.byAge.pop();
+			stats.population.byAge.pop();
 			stats.population.topAge--;
 		}
 		//births
