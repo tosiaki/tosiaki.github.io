@@ -1,0 +1,286 @@
+<html>
+<head>
+<title>The City</title>
+<script>
+<!--
+
+function fertilityByAge(age) {
+	if (age>15 && age<24) {
+		return (age-15)*250/8;
+	}
+	if (age>23 && age<32) {
+		return 250-(age-23)*150/8;
+	}
+	if (age>31 && age<45) {
+		return 100-(age-31)*100/14;
+	}
+	else return 0;
+}
+
+function muscleByAge(age) {
+	if (age<16) {
+		return age*2;
+	}
+	if (age>15 && age<41) {
+		return 30+(age-15)*4;
+	}
+	if (age>40 && age<86) {
+		return 130-(age-40)*130/45;
+	}
+	else return 0;
+}
+
+function gatheringLearningByAge(age){
+	if (age>=5 && age<20) {
+		return (age-5);
+	}
+	if (age>=20 && age<50) {
+		return 15;
+	}
+	if (age>=50 && age<80) {
+		return 15-(age-50)*15/30;
+	}
+	else return 0;
+}
+
+var initPop=[];
+for (var i=0; i<=50; i++) {
+	initPop.push({
+		'age':i,
+		'population':100,
+		'age specific diseases':[],
+		'skills':{
+			'gathering':[
+				{'level':0,'population':100}
+			]
+		}
+	});
+	initPop[0].population=0;
+}
+
+
+var stats={
+	'time':{'division':0,'day':0,'year':0},
+	'population':{
+		'byAge':initPop,
+		'totalPopulation':0,
+		'topAge':50,
+		'diseases':{
+			'malaria':{'name':'Malaria','infected':100,'infectionRate':0,'deathRate':0.00004,'transmissionRate':0.000000002},
+			'tuberculosis':{'name':'Tuberculosis','infected':100,'infectionRate':0,'deathRate':0.00005,'immunityRate':0.0000212,'transmissionRate':0.000000009,'immunePopulation':0},
+			'measles':{'name':'Measles','infected':100,'infectionRate':0,'deathRate':0.0000001,'immunityRate':0.02,'transmissionRate':0.002,'immunePopulation':0}
+		},
+		'consumptionRatio':0.1,
+		'caloricNeeds':0,
+		'water': {
+			'consumption':0,
+			'satisfaction':1
+		}
+	},
+	'resources':{
+		'water':{'name':'Water','available':0},
+		'food':{
+			'fig':{'name':'Fig','amount':100000,'calories':250,'stock':0},
+			'olive':{'name':'Olive','amount':500000,'calories':4,'stock':0},
+			'plum':{'name':'Plum','amount':50000,'calories':46,'stock':0},
+			'pear':{'name':'Pear','amount':40000,'calories':102,'stock':0},
+			'raspberry':{'name':'Raspberry','amount':30000,'calories':65,'stock':0},
+			'grape':{'name':'Grape','amount':60000,'calories':62,'stock':0},
+			'apple':{'name':'Apple','amount':10000,'calories':95,'stock':0},
+			'orange':{'name':'Orange','amount':20000,'calories':45,'stock':0}
+		}
+	},
+	'totalCalories':0,
+	'environment':{
+		'mosquitoes': {
+			'name':'Mosquitoes',
+			'number':8000000,
+			'diseases':{
+				'malaria': {
+					'name':'Malaria',
+					'infected':0
+				}
+			}
+		},
+		'river': {
+			'flow':100000*24*3600
+		}
+	}
+};
+
+function diseaseReduction(disease) {
+	return 1-disease.infectionRate*disease.deathRate;
+}
+function diseaseTotalReduction(diseases) {
+	var result=1;
+	for (var disease in diseases) {
+		result*=diseaseReduction(diseases[disease]);
+	}
+	return result;
+}
+
+function startLoop() {
+	setInterval(function(){
+		
+		var populationReduction=stats.population.water.satisfaction*
+			Math.min(1/stats.population.consumptionRatio,1)*
+			diseaseTotalReduction(stats.population.diseases);
+			
+		stats.population.water.consumption=0;
+		stats.population.totalPopulation=0;
+		var gatheringPower=0;
+		for (age=0;age<=stats.population.topAge;age++) {
+			//stats.population['by age'][age]['population']=stats.population['by age'][age]['population']*Math.pow(1-Math.min(0.0003*Math.pow(1.07,age),1),1/(365*5));
+			
+			stats.population.byAge[age].population*=populationReduction;
+			
+			for (var i=0;i<stats.population.byAge[age].skills.gathering.length;i++) {
+				stats.population.byAge[age].skills.gathering[i].population*=populationReduction;
+				gatheringPower+=stats.population.byAge[age].skills.gathering[i].population*Math.sqrt((stats.population.byAge[age].skills.gathering[i].level+1)*muscleByAge(age));
+				
+				stats.population.byAge[age].skills.gathering[i].level+=gatheringLearningByAge(age);//skill up
+			}
+			
+			stats.population.water.consumption+=stats.population.byAge[age].population*0.08;
+			stats.population.totalPopulation+=stats.population.byAge[age].population;
+		}
+		stats.population.caloricNeeds=stats.population.totalPopulation*2000;
+		
+		stats.totalCalories=0;
+		for (food in stats.resources.food) {
+			stats.resources.food[food].stock+=stats.resources.food[food].amount*(1-Math.pow(1-1/stats.resources.food[food].amount,gatheringPower));
+			stats.totalCalories+=stats.resources.food[food].stock*stats.resources.food[food].calories;
+		}
+		if (stats.totalCalories!=0) {
+			stats.population.consumptionRatio=stats.population.caloricNeeds/stats.totalCalories;
+		}
+		else {
+			stats.population.consumptionRatio=10000000000000000000000000000000000000000;
+		}
+		
+		if (stats.population.consumptionRatio<=1) {
+			for (food in stats.resources.food) {
+				stats.resources.food[food].stock*=(1-stats.population.consumptionRatio);
+			}
+		}
+		else {
+			for (food in stats.resources.food) {
+				stats.resources.food[food].stock=0;
+			}
+		}
+		//Malaria
+		stats.population.diseases.malaria.infected*=populationReduction*(1-stats.population.diseases.malaria.deathRate)/(1-stats.population.diseases.malaria.infectionRate*stats.population.diseases.malaria.deathRate);
+		
+		stats.population.diseases.malaria.infected+=(stats.population.totalPopulation-stats.population.diseases.malaria.infected)*
+		(1-Math.pow(1-stats.population.diseases.malaria.transmissionRate,stats.environment.mosquitoes.diseases.malaria.infected));
+		
+		stats.environment.mosquitoes.diseases.malaria.infected*=(1-1/200);
+		stats.environment.mosquitoes.diseases.malaria.infected+=(stats.environment.mosquitoes.number-stats.environment.mosquitoes.diseases.malaria.infected)*
+		(1-Math.pow(1-stats.population.diseases.malaria.transmissionRate,stats.population.diseases.malaria.infected));
+		
+		//Tuberculosis
+		stats.population.diseases.tuberculosis.immunePopulation+=stats.population.diseases.tuberculosis.infected*stats.population.diseases.tuberculosis.immunityRate;
+		stats.population.diseases.tuberculosis.immunePopulation*=populationReduction/(1-stats.population.diseases.tuberculosis.infectionRate*stats.population.diseases.tuberculosis.deathRate);
+
+		stats.population.diseases.tuberculosis.infected*=populationReduction*(1-stats.population.diseases.tuberculosis.immunityRate)*(1-stats.population.diseases.tuberculosis.deathRate)/(1-stats.population.diseases.tuberculosis.infectionRate*stats.population.diseases.tuberculosis.deathRate);
+		
+		stats.population.diseases.tuberculosis.infected+=(stats.population.totalPopulation-stats.population.diseases.tuberculosis.infected-stats.population.diseases.tuberculosis.immunePopulation)*
+		(1-Math.pow(1-stats.population.diseases.tuberculosis.transmissionRate,stats.population.diseases.tuberculosis.infected));
+		
+		//Measles
+		stats.population.diseases.measles.immunePopulation+=stats.population.diseases.measles.infected*stats.population.diseases.measles.immunityRate;
+		stats.population.diseases.measles.immunePopulation*=populationReduction/(1-stats.population.diseases.measles.infectionRate*stats.population.diseases.measles.deathRate);
+		
+		stats.population.diseases.measles.infected*=populationReduction*(1-stats.population.diseases.measles.immunityRate)*(1-stats.population.diseases.measles.deathRate)/(1-stats.population.diseases.measles.infectionRate*stats.population.diseases.measles.deathRate);
+		
+		
+		stats.population.diseases.measles.infected+=(stats.population.totalPopulation-stats.population.diseases.measles.infected-stats.population.diseases.measles.immunePopulation)*
+		(1-Math.pow(1-stats.population.diseases.measles.transmissionRate,stats.population.diseases.measles.infected));
+		
+		for (var disease in stats.population.diseases) {
+			if (stats.population.totalPopulation>0) {
+				stats.population.diseases[disease].infectionRate=stats.population.diseases[disease].infected/stats.population.totalPopulation;
+			}
+		}
+		
+		//Water
+		if (stats.population.water.consumption<stats.environment.river.flow) {
+			stats.population.water.satisfaction=1;
+		}
+		else {
+			stats.population.water.satisfaction=stats.environment.river.flow/stats.population.water.consumption;
+		}
+		
+		//remove nonexistent population ages
+		while(stats.population.byAge[stats.population.topAge].population<0.5 && stats.population.topAge>50) {
+			stats.population.byAge.pop();
+			stats.population.topAge--;
+		}
+		//births
+		for (var age=15;age<50;age++) {
+			var increase=fertilityByAge(age)*stats.population.byAge[age].population/1000/5/365;
+			stats.population.byAge[0].population+=increase;
+			if (stats.population.byAge[0].skills.gathering[0].level>0) {
+				stats.population.byAge[0].skills.gathering.unshift({'level':0,'population':0});
+			}
+			stats.population.byAge[0].skills.gathering[0].population+=increase;
+		}
+	
+		if(stats.time.division<5) {
+			stats.time.division++;
+		}
+		else {
+			stats.time.division=0;
+			if(stats.time.day<365) {
+				stats.time.day++;
+			}
+			else {
+				stats.time.day=0;
+				stats.time.year++;
+				stats.population.byAge.unshift({'age':0,'population':0,'age specific diseases':[],'skills':{'gathering':[{'level':0,'population':0}]}});
+				stats.population.topAge++;
+				for (var age=1;age<=stats.population.topAge;age++) {
+					stats.population.byAge[age].age++;
+				}
+				stats.population.byAge[0].population=0;
+			}
+		}
+		
+		var newAgeList='';
+		newAgeList+='<li>Total: '+Math.round(stats.population.totalPopulation)+'</li>';
+		for (var age=0;age<=stats.population.topAge;age++) {
+			newAgeList+='<li>Age '+age+': '+Math.round(stats.population.byAge[age].population)+'</li>';
+		}
+		document.getElementById('time').innerHTML='Day '+stats.time.day+' Year '+stats.time.year;
+		document.getElementById('water').innerHTML='Water available: '+stats.environment.river.flow+', Water used: '+Math.round(stats.population.water.consumption);
+		
+		var foodList='';
+		for (food in stats.resources.food) {
+			foodList+='<li>'+stats.resources.food[food].name+': '+Math.round(stats.resources.food[food].stock)+'</li>';
+		}
+		
+		document.getElementById('food').innerHTML=foodList;
+		document.getElementById('malaria').innerHTML='Malaria infections: '+Math.round(stats.population.diseases.malaria.infected)+', Infected mosquitoes: '+Math.round(stats.environment.mosquitoes.diseases.malaria.infected);
+		document.getElementById('tuberculosis').innerHTML='Tuberculosis infections: '+Math.round(stats.population.diseases.tuberculosis.infected)+', Number immune: '+Math.round(stats.population.diseases.tuberculosis.immunePopulation);
+		document.getElementById('measles').innerHTML='Measles infections: '+Math.round(stats.population.diseases.measles.infected)+', Number immune: '+Math.round(stats.population.diseases.measles.immunePopulation);
+		document.getElementById('population').innerHTML=newAgeList;
+		
+	},1);
+}
+
+window.onload=startLoop();
+-->
+</script>
+</head>
+<body>
+<p id="time"></p>
+<p id="water"></p>
+<ul id="food"></ul>
+<p id="malaria"></p>
+<p id="tuberculosis"></p>
+<p id="measles"></p>
+
+<ul id="population">
+</ul>
+</body>
+</html>
