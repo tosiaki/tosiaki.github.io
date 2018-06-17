@@ -137,6 +137,8 @@ define([
 					y: 				y,
 					velX: 			velX,
 					velY: 			velY,
+					accX: 0,
+					accY: 0,
 					mass: 			mass, 
 					density: 		density,
 					path: 			path
