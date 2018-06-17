@@ -409,9 +409,10 @@ define([
 			}
 			bnBuildTree();
 			forceBNtree();
-			// updateVel(calculationSpeed);
+			updateVel(calculationSpeed);
 
 			
+			/*
 			for (var a = spacetime.length - 1; a >= 0; a--) {
 				var objectA = spacetime[a];
 
@@ -441,6 +442,7 @@ define([
 					};
 				};
 			};
+			*/
 			
 
 		}
