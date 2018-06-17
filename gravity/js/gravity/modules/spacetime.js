@@ -157,7 +157,7 @@ define([
 		var ETA = 0; // Softening constant
 		var GFACTOR = 3; // Higher means distance has more effect (3 is reality)
 
-		
+
 		
 		var bnRoot;
 		function bnBuildTree() {
@@ -394,6 +394,19 @@ define([
 
 		// Loops through all objects and calculates the delta velocity from gravitational forces
 		function calculateObjectForce(){
+
+			maxPosX = 0;
+			minPosX = 0;
+			maxPosY = 0;
+			minPosY = 0;
+
+			for (var i=0; i<spacetime.length; i++) {
+				maxPosX = Math.max(maxPosX, spacetime[i].x);
+				minPosX = Math.min(minPosX, spacetime[i].x);
+				maxPosY = Math.max(maxPosY, spacetime[i].y);
+				minPosY = Math.min(minPosY, spacetime[i].y);
+			}
+			
 			for (var a = spacetime.length - 1; a >= 0; a--) {
 				var objectA = spacetime[a];
 
