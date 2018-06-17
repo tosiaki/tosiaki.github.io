@@ -412,7 +412,7 @@ define([
 			updateVel(calculationSpeed);
 
 			
-			
+			/*
 			for (var a = spacetime.length - 1; a >= 0; a--) {
 				var objectA = spacetime[a];
 
@@ -442,6 +442,7 @@ define([
 					};
 				};
 			};
+			*/
 			
 			
 
@@ -466,8 +467,8 @@ define([
 				// object.velX += object.deltaVelX * calculationSpeed;
 				// object.velY += object.deltaVelY * calculationSpeed;
 				
-				object.x += object.velX * calculationSpeed;
-				object.y += object.velY * calculationSpeed;
+				object.x += object.accX * calculationSpeed;
+				object.y += object.accY * calculationSpeed;
 
 				// Reset object delta velocity
 				object.deltaVelX = 0;
