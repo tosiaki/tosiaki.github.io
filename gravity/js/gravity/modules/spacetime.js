@@ -146,6 +146,22 @@ define([
 					path: 			path
 				});
 
+				if(spacetime.length < 500) {
+					var newObject2 = new objectConstructor({
+						cameraFocus: 	false,
+						x: 				-x+(Math.random()-0.5)*Math.min(mass*5,50*Math.sqrt(spacetime.length)),
+						y: 				-y+(Math.random()-0.5)*Math.min(mass*5,50*Math.sqrt(spacetime.length)),
+						velX: 			-velX+(Math.random()-0.5)*mass,
+						velY: 			-velY+(Math.random()-0.5)*mass,
+						accX: 0,
+						accY: 0,
+						mass: 			Math.random(), 
+						density: 		density,
+						path: 			[]
+					});
+					addObject(newObject2);
+				}
+
 				addObject(newObject);
 
 				return true;
@@ -453,6 +469,9 @@ define([
 			for (var i = 0; i < spacetime.length; i++) {
 				var object = spacetime[i];
 
+				/*
+
+
 				// add coords to object path
 				object.path.push({
 					x: object.x,
@@ -463,12 +482,28 @@ define([
 				if (object.path.length > Math.min(120, getObjectRadius(object) * 20 / getVelocity(object))) {
 					object.path.splice(0, 1);
 				};
+
+				*/
 				
 				// object.velX += object.deltaVelX * calculationSpeed;
 				// object.velY += object.deltaVelY * calculationSpeed;
 				
 				object.velX += object.accX * calculationSpeed;
 				object.velY += object.accY * calculationSpeed;
+
+				if(object.x > 50*Math.sqrt(spacetime.length) && object.velX > 0) {
+					object.velX = -object.velX;
+				}
+				if(object.x < -50*Math.sqrt(spacetime.length) && object.velX < 0) {
+					object.velX = -object.velX;
+				}
+				if(object.y > 50*Math.sqrt(spacetime.length) && object.velY > 0) {
+					object.velY = -object.velY;
+				}
+				if(object.y < -50*Math.sqrt(spacetime.length) && object.velY < 0) {
+					object.velY = -object.velY;
+				}
+
 				object.x += object.velX * calculationSpeed;
 				object.y += object.velY * calculationSpeed;
 
