@@ -472,6 +472,8 @@ define([
 				// Reset object delta velocity
 				object.deltaVelX = 0;
 				object.deltaVelY = 0;
+				object.accX = 0;
+				object.accY = 0;
 			};
 		}
 
