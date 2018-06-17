@@ -157,7 +157,20 @@ define([
 		var ETA = 0; // Softening constant
 		var GFACTOR = 3; // Higher means distance has more effect (3 is reality)
 
-
+		function bnDeleteTree() {
+			if (bnRoot) {bnRoot = bnDeleteNode(bnRoot);}
+		}
+		function bnDeleteNode(node) {
+			node.b = null;
+			node.box = null;
+			// For each child
+			for (var i=0;i<4;i++) {
+				if (node.nodes[i]) { // If child exists
+					node.nodes[i] = bnDeleteNode(node.nodes[i]);
+				}
+			}
+			return null;
+		}
 		
 		var bnRoot;
 		function bnBuildTree() {
