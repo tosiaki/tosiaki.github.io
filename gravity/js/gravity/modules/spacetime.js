@@ -156,10 +156,10 @@ define([
 		}
 		var MAXDEPTH = 50; // BN tree max depth ( one less than actual, example with maxdepth = 2, the levels are [0 1 2] )
 		var BN_THETA = 0.5;
-		var DISTANCE_MULTIPLE = 2;
-		var G = 1e-5; // Gravitational Constant
+		var DISTANCE_MULTIPLE = 1;
+		var G = 1; // Gravitational Constant
 		var ETA = 0; // Softening constant
-		var GFACTOR = 3; // Higher means distance has more effect (3 is reality)
+		var GFACTOR = 2; // Higher means distance has more effect (3 is reality)
 
 		function bnDeleteTree() {
 			if (bnRoot) {bnRoot = bnDeleteNode(bnRoot);}
