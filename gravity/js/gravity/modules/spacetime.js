@@ -463,8 +463,8 @@ define([
 					object.path.splice(0, 1);
 				};
 				
-				object.velX += object.deltaVelX * calculationSpeed;
-				object.velY += object.deltaVelY * calculationSpeed;
+				// object.velX += object.deltaVelX * calculationSpeed;
+				// object.velY += object.deltaVelY * calculationSpeed;
 				
 				object.x += object.velX * calculationSpeed;
 				object.y += object.velY * calculationSpeed;
