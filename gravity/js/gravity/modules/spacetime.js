@@ -150,6 +150,247 @@ define([
 				return false;
 			};
 		}
+		var MAXDEPTH = 50; // BN tree max depth ( one less than actual, example with maxdepth = 2, the levels are [0 1 2] )
+		var BN_THETA = 0.5;
+		var DISTANCE_MULTIPLE = 2;
+		var G = 1e-5; // Gravitational Constant
+		var ETA = 0; // Softening constant
+		var GFACTOR = 3; // Higher means distance has more effect (3 is reality)
+
+		
+		
+		var bnRoot;
+		function bnBuildTree() {
+			bnDeleteTree(bnRoot); // Delete Tree to clear memory
+			bnRoot = {b: [], // Body
+				leaf:true,
+				CoM: null, // center of mass
+				nodes:[null,null,null,null],
+				// x y x2 y2
+				box:[0, 0, canvasElement.width, canvasElement.height]};
+			
+			// Add each body to tree
+			for (var i=0;i<spacetime.length;i++) {
+				if (pointInBBOX(spacetime[i].x,spacetime[i].y,bnRoot.box)) {
+					bnAddBody(bnRoot,i,0);
+				}
+				else {
+					if (DEBUG>=4) {console.log("Body ",i," has left the BNtree area. Not added");}
+				}
+			}
+			if (DEBUG>=2) {
+				console.log("BNtree Built: ",bnRoot);
+			}
+			bnSetTreeStats(); // Update bn tree stats
+		}
+
+		// BBOX = [x y x2 y2]
+		function pointInBBOX(x,y,BBOX) {
+			if (x >= BBOX[0] && x <= BBOX[2] && y >= BBOX[1] && y <= BBOX[3]) {return true;}
+			else {return false;}
+		}
+		
+		function bnAddBody(node,i,depth) {
+			if (DEBUG>=3) {
+				console.log("bnAddBody(",node,",",i,",",depth,")");
+			}
+			// if node has body already
+			if ( node.b.length > 0 ) { // not empty
+				// Check if hit max depth
+				if (depth > MAXDEPTH) {
+					if (DEBUG>=3) {console.log('MAX DEPTH B',i);}
+					node.b [node.b.length] = i; // Add body to same node since already at max depth
+				} 
+				else {
+					var subBodies;
+					if (!node.leaf) { // Same as saying node.b = "PARENT"
+						// Node is a parent with children
+						subBodies = [i];
+					} else {
+						// Node is a leaf node (no children), turn to parent
+						subBodies = [node.b,i];
+					}
+					for (var k=0;k<subBodies.length;k++) {
+						// Add body to children too		
+						var quad = getQuad(subBodies[k],node.box);
+						var child = node.nodes[quad];
+						if (child) {
+							// if quad has child, recurse with child
+							bnAddBody(child,subBodies[k],depth+1);
+						} else {
+							// else add body to child
+							node = bnMakeNode(node,quad,subBodies[k]);
+						}
+					}
+					node.b = ["PARENT"];
+					node.leaf = false; // Always going to turn into a parent if not already
+				}
+				// Update center of mass
+				node.CoM[1] = (node.CoM[1]*node.CoM[0] + spacetime[i].x*spacetime[i].mass)/(node.CoM[0]+spacetime[i].mass);
+				node.CoM[2] = (node.CoM[2]*node.CoM[0] + spacetime[i].y*spacetime[i].mass)/(node.CoM[0]+spacetime[i].mass);
+				node.CoM[0] += spacetime[i].mass;
+			} else { // else if node empty, add body
+				node.b = [i];
+				node.CoM = [spacetime[i].mass, spacetime[i].x,spacetime[i].y]; // Center of Mass set to the position of single body
+			}
+		}
+		function getQuad(i,box) {
+			var mx = (box[0]+box[2])/2;
+			var my = (box[1]+box[3])/2;
+			if (spacetime[i].x < mx) { // Left
+				if (spacetime[i].y < my) {return 0;} // Top
+				else {return 2;} // Bottom
+			}
+			else { // right
+				if (spacetime[i].y < my) {return 1;} // Top
+				else {return 3;} // Bottom}
+			}
+		}
+		function bnMakeNode(parent,quad,child) {
+			if (DEBUG>=3) {
+				console.log("bnMakeNode(",parent,",",quad,",",child,")");
+			}
+			var child = {b:[child],
+				leaf:true,
+				CoM : [spacetime[child].mass, spacetime[child].x,spacetime[child].y], // Center of Mass set to the position of single body
+				nodes:[null,null,null,null],
+				box:[0,0,0,0]};
+
+			switch (quad) {
+				case 0: // Top Left
+					child.box = [parent.box[0],
+						parent.box[1],
+						(parent.box[0]+parent.box[2])/2, 
+						(parent.box[1]+parent.box[3])/2];
+					break;
+				case 1: // Top Right
+					child.box = [(parent.box[0]+parent.box[2])/2,
+						parent.box[1],
+						parent.box[2], 
+						(parent.box[1]+parent.box[3])/2];
+					break;
+				case 2: // Bottom Left
+					child.box = [parent.box[0],
+						(parent.box[1]+parent.box[3])/2,
+						(parent.box[0]+parent.box[2])/2, 
+						parent.box[3]];
+					break;
+				case 3: // Bottom Right
+					child.box = [(parent.box[0]+parent.box[2])/2,
+						(parent.box[1]+parent.box[3])/2,
+						parent.box[2], 
+						parent.box[3]];
+					break;
+			}
+			parent.nodes[quad] = child;
+			return parent;
+		}
+		
+		function doBNtree(bI) {
+			doBNtreeRecurse(bI,bnRoot);
+		}
+		function doBNtreeRecurse(bI,node) {
+			if (node.leaf) {
+				// If node is a leaf node
+				for (var k=0;k<node.b.length;k++) {
+					if (bI != node.b[k]) { // Skip self
+						setAccel(bI,node.b[k],false);
+						numChecks += 1;
+					}
+				}
+			}
+			else {
+				var s = Math.max( node.box[2]-node.box[0] , node.box[3]-node.box[1] ); // Biggest side of box
+				var d = getDist(spacetime[bI].x,spacetime[bI].y,
+					node.CoM[1],node.CoM[2]);
+				if (s/d < BN_THETA) {
+					setAccelDirect(bI,node.CoM[0],node.CoM[1],node.CoM[2])
+					numChecks += 1;
+				}
+				else {
+					// Recurse for each child
+					for (var k=0;k<4;k++) {
+						if (node.nodes[k]) {doBNtreeRecurse(bI,node.nodes[k]);}
+					}
+				}
+			}
+		}
+
+		function getDist(x,y,x2,y2) {
+			return Math.sqrt(Math.pow(x2-x,2)+Math.pow(y2-y,2));
+		}
+		// Update accelerations using BN tree
+		function forceBNtree() {
+			bnBuildTree(); // Build BN tree based on current pos
+			numChecks = 0;
+			for (var i=0;i<spacetime.length;i++) {
+				// For each body
+				doBNtree(i);
+			}
+		}
+		
+		function setAccel(i,j,do_Both) {
+			do_Both = typeof(do_Both) != 'undefined' ? do_Both : true;
+			
+			// Get Force Vector between bodies i, j
+			var F = getForceVec(i,j);
+
+			// a = F/m
+			// Body i
+			spacetime[i].accX += F[0]/spacetime[i].mass;
+			spacetime[i].accY += F[1]/spacetime[i].mass;
+			
+			if (do_Both) {
+				// Body j, equal and opposite force
+				spacetime[j].accX -= F[0]/spacetime[j].mass;
+				spacetime[j].accY -= F[1]/spacetime[j].mass;
+			}
+		}
+		function setAccelDirect(i,m,x,y) {
+			// Set's accel according to given mass
+
+			// get Force Vector between body i
+			// and a virtual mass
+			//   with mass m, at position cx,cy
+			var F = getForceVecDirect(
+				spacetime[i].mass,spacetime[i].x,spacetime[i].y,
+				m,x,y);
+			
+			// Update acceleration of body
+			spacetime[i].accX += F[0]/spacetime[i].mass;
+			spacetime[i].accY += F[1]/spacetime[i].mass;
+		}
+		
+		function getForceVec(i,j) {
+			if (DEBUG>=10) {
+				console.log("B",i," <-> B",j," : ",F);
+			}
+			return getForceVecDirect(
+				spacetime[i].mass,spacetime[i].x,spacetime[i].y,
+				spacetime[j].mass,spacetime[j].x,spacetime[j].y);
+		}
+
+		function getForceVecDirect(m,x,y,m2,x2,y2) {
+			// Determines force interaction between
+			// bods[i] and bods[j], an adds to bods[i]
+			var dx = x2-x;
+			var dy = y2-y;
+			var r = (getDist(x,y,x2,y2)+ETA) * DISTANCE_MULTIPLE;
+			// F_{x|y} = d_{x|y}/r * G*M*m/r.^3;
+			var F = G*m*m2/Math.pow(r,GFACTOR);
+
+			return [ F*dx/r , F*dy/r ];
+		}
+		
+		var numChecks;
+
+		function updateVel(dt_step) {
+			// Update body velocities based on accelerations
+			for (var i=0;i<spacetime.length;i++) {
+				spacetime[i].velX += spacetime[i].accX*dt_step;
+				spacetime[i].velY += spacetime[i].accY*dt_step;
+			}
+		}
 
 		// Loops through all objects and calculates the delta velocity from gravitational forces
 		function calculateObjectForce(){
