@@ -390,7 +390,11 @@ define([
 				maxPosY = Math.max(maxPosY, spacetime[i].y);
 				minPosY = Math.min(minPosY, spacetime[i].y);
 			}
+			bnBuildTree();
+			forceBNtree();
+			updateVel(calculationSpeed);
 
+			/*
 			for (var a = spacetime.length - 1; a >= 0; a--) {
 				var objectA = spacetime[a];
 
@@ -420,6 +424,8 @@ define([
 					};
 				};
 			};
+			*/
+			
 		}
 
 		// Loops through all objects and applies the force delta to the velocity
