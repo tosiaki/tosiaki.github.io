@@ -73,8 +73,8 @@ define([
 			// Velocity
 			this.velX = object.velX;
 			this.velY = object.velY;
-			this.accX = object.velX;
-			this.accY = object.velY;
+			this.accX = 0;
+			this.accY = 0;
 
 			// Delta velocity (start at zero)
 			this.deltaVelX = 0;
@@ -412,7 +412,7 @@ define([
 			updateVel(calculationSpeed);
 
 			
-			/*
+			
 			for (var a = spacetime.length - 1; a >= 0; a--) {
 				var objectA = spacetime[a];
 
@@ -442,7 +442,7 @@ define([
 					};
 				};
 			};
-			*/
+			
 			
 
 		}
