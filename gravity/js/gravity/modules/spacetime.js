@@ -409,7 +409,7 @@ define([
 			}
 			bnBuildTree();
 			forceBNtree();
-			updateVel(calculationSpeed);
+			// updateVel(calculationSpeed);
 
 			
 			/*
