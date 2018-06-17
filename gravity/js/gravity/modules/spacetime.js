@@ -73,6 +73,8 @@ define([
 			// Velocity
 			this.velX = object.velX;
 			this.velY = object.velY;
+			this.accX = object.velX;
+			this.accY = object.velY;
 
 			// Delta velocity (start at zero)
 			this.deltaVelX = 0;
