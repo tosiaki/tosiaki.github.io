@@ -404,7 +404,7 @@ define([
 				minPosY = Math.min(minPosY, spacetime[i].y);
 			}
 			bnBuildTree();
-			// forceBNtree();
+			forceBNtree();
 			// updateVel(calculationSpeed);
 
 			
