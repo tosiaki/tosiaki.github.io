@@ -167,21 +167,15 @@ define([
 				CoM: null, // center of mass
 				nodes:[null,null,null,null],
 				// x y x2 y2
-				box:[0, 0, canvasElement.width, canvasElement.height]};
+				box:[minPosX,minPosY,maxPosX,maxPosY]};
 			
 			// Add each body to tree
 			for (var i=0;i<spacetime.length;i++) {
 				if (pointInBBOX(spacetime[i].x,spacetime[i].y,bnRoot.box)) {
 					bnAddBody(bnRoot,i,0);
 				}
-				else {
-					if (DEBUG>=4) {console.log("Body ",i," has left the BNtree area. Not added");}
-				}
 			}
-			if (DEBUG>=2) {
-				console.log("BNtree Built: ",bnRoot);
-			}
-			bnSetTreeStats(); // Update bn tree stats
+			// bnSetTreeStats(); // Update bn tree stats
 		}
 
 		// BBOX = [x y x2 y2]
@@ -191,14 +185,10 @@ define([
 		}
 		
 		function bnAddBody(node,i,depth) {
-			if (DEBUG>=3) {
-				console.log("bnAddBody(",node,",",i,",",depth,")");
-			}
 			// if node has body already
 			if ( node.b.length > 0 ) { // not empty
 				// Check if hit max depth
 				if (depth > MAXDEPTH) {
-					if (DEBUG>=3) {console.log('MAX DEPTH B',i);}
 					node.b [node.b.length] = i; // Add body to same node since already at max depth
 				} 
 				else {
@@ -247,9 +237,6 @@ define([
 			}
 		}
 		function bnMakeNode(parent,quad,child) {
-			if (DEBUG>=3) {
-				console.log("bnMakeNode(",parent,",",quad,",",child,")");
-			}
 			var child = {b:[child],
 				leaf:true,
 				CoM : [spacetime[child].mass, spacetime[child].x,spacetime[child].y], // Center of Mass set to the position of single body
@@ -362,9 +349,6 @@ define([
 		}
 		
 		function getForceVec(i,j) {
-			if (DEBUG>=10) {
-				console.log("B",i," <-> B",j," : ",F);
-			}
 			return getForceVecDirect(
 				spacetime[i].mass,spacetime[i].x,spacetime[i].y,
 				spacetime[j].mass,spacetime[j].x,spacetime[j].y);
@@ -406,7 +390,7 @@ define([
 				maxPosY = Math.max(maxPosY, spacetime[i].y);
 				minPosY = Math.min(minPosY, spacetime[i].y);
 			}
-			
+
 			for (var a = spacetime.length - 1; a >= 0; a--) {
 				var objectA = spacetime[a];
 
