@@ -149,8 +149,8 @@ define([
 				if(spacetime.length < 500) {
 					var newObject2 = new objectConstructor({
 						cameraFocus: 	false,
-						x: 				-x+(Math.random()-0.5)*Math.min(mass*5,500*Math.sqrt(spacetime.length)),
-						y: 				-y+(Math.random()-0.5)*Math.min(mass*5,500*Math.sqrt(spacetime.length)),
+						x: 				-x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
+						y: 				-y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
 						velX: 			-velX,
 						velY: 			-velY,
 						accX: 0,
@@ -491,16 +491,16 @@ define([
 				object.velX += object.accX * calculationSpeed;
 				object.velY += object.accY * calculationSpeed;
 
-				if(object.x > 500*Math.sqrt(spacetime.length) && object.velX > 0) {
+				if(object.x > 2000*Math.sqrt(spacetime.length) + bnRoot.CoM[1] && object.velX > 0) {
 					object.velX = -object.velX;
 				}
-				if(object.x < -500*Math.sqrt(spacetime.length) && object.velX < 0) {
+				if(object.x < -2000*Math.sqrt(spacetime.length) + bnRoot.CoM[1] && object.velX < 0) {
 					object.velX = -object.velX;
 				}
-				if(object.y > 500*Math.sqrt(spacetime.length) && object.velY > 0) {
+				if(object.y > 2000*Math.sqrt(spacetime.length) + bnRoot.CoM[2] && object.velY > 0) {
 					object.velY = -object.velY;
 				}
-				if(object.y < -500*Math.sqrt(spacetime.length) && object.velY < 0) {
+				if(object.y < -2000*Math.sqrt(spacetime.length) + bnRoot.CoM[2] && object.velY < 0) {
 					object.velY = -object.velY;
 				}
 
@@ -508,8 +508,8 @@ define([
 				object.y += object.velY * calculationSpeed;
 
 				// Reset object delta velocity
-				object.deltaVelX = 0;
-				object.deltaVelY = 0;
+				// object.deltaVelX = 0;
+				// object.deltaVelY = 0;
 				object.accX = 0;
 				object.accY = 0;
 			};
