@@ -630,9 +630,10 @@ define([
 					var maxCellY = Math.floor(maxPosY/maxDiameter);
 
 					for (var i=0; i<spacetime.length; i++) {
-						grid[gridPosX] = grid[gridPosX] || [];
 						gridPosX = Math.floor(spacetime[i].x/maxDiameter);
 						gridPosY = Math.floor(spacetime[i].y/maxDiameter);
+						grid[gridPosX] = grid[gridPosX] || [];
+						grid[gridPosX][gridPosY] = grid[gridPosX][gridPosY] || [];
 						grid[gridPosX][gridPosY].push(i)
 					}
 
