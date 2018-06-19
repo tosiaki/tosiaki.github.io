@@ -636,9 +636,9 @@ define([
 						grid[gridPosX][gridPosY].push(i)
 					}
 
-					for (var gridPosX = minCellX; gridPosX <= maxPosX; gridPosX++) {
+					for (var gridPosX = minCellX; gridPosX <= maxCellX; gridPosX++) {
 						if (grid[gridPosX]) {
-							for (var gridPosY = minCellY; gridPosY <= maxPosY; gridPosY++) {
+							for (var gridPosY = minCellY; gridPosY <= maxCellY; gridPosY++) {
 								if (grid[gridPosX][gridPosY]) {
 									for (var a = grid[gridPosX][gridPosY].length - 1; a >= 0; a--) {
 										var objectA = spacetime[grid[gridPosX][gridPosY][a]];
