@@ -621,7 +621,6 @@ define([
 						minPosY = Math.min(minPosY, spacetime[i].y);
 						maxDiameter = Math.max(maxDiameter, 2*getObjectRadius(spacetime[i]))
 					}
-					bnBuildTree();
 
 					var minCellX = Math.floor(minPosX/maxDiameter);
 					var maxCellX = Math.floor(maxPosX/maxDiameter);
@@ -680,6 +679,7 @@ define([
 
 				// Calculate gravitational forces between all objects
 				// calculateObjectForce();
+				bnBuildTree();
 				forceBNtree();
 
 				// Apply delta velocity to all objects
