@@ -164,6 +164,8 @@ define([
 
 				addObject(newObject);
 
+				console.log(spacetime.length);
+
 				return true;
 			}
 			else {
