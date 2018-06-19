@@ -193,6 +193,10 @@ define([
 		}
 		
 		var bnRoot;
+		var maxPosX = 0;
+		var minPosX = 0;
+		var maxPosY = 0;
+		var minPosY = 0;
 		function bnBuildTree() {
 			bnDeleteTree(bnRoot); // Delete Tree to clear memory
 			bnRoot = {b: [], // Body
@@ -412,17 +416,6 @@ define([
 		// Loops through all objects and calculates the delta velocity from gravitational forces
 		function calculateObjectForce(){
 
-			maxPosX = 0;
-			minPosX = 0;
-			maxPosY = 0;
-			minPosY = 0;
-
-			for (var i=0; i<spacetime.length; i++) {
-				maxPosX = Math.max(maxPosX, spacetime[i].x);
-				minPosX = Math.min(minPosX, spacetime[i].x);
-				maxPosY = Math.max(maxPosY, spacetime[i].y);
-				minPosY = Math.min(minPosY, spacetime[i].y);
-			}
 			bnBuildTree();
 			forceBNtree();
 			// updateVel(calculationSpeed);
@@ -611,25 +604,58 @@ define([
 			api.calculateForces = function(){
 				var self = this;
 
+
 				// -----------------------------------------
 				// | Find clustering objects and join them |
 				// -----------------------------------------
 				function recursivelyJoinClusteringObjects(){
-					for (var a = spacetime.length - 1; a >= 0; a--) {
-						var objectA = spacetime[a];
+					maxPosX = 0;
+					minPosX = 0;
+					maxPosY = 0;
+					minPosY = 0;
+					maxDiameter = 0.1;
+					cellSize = 0;
+					var grid = [];
 
-						for (var b = spacetime.length - 1; b >= 0; b--) {
-							if (a !== b) {
-								var objectB = spacetime[b];
+					for (var i=0; i<spacetime.length; i++) {
+						maxPosX = Math.max(maxPosX, spacetime[i].x);
+						minPosX = Math.min(minPosX, spacetime[i].x);
+						maxPosY = Math.max(maxPosY, spacetime[i].y);
+						minPosY = Math.min(minPosY, spacetime[i].y);
+						maxDiameter = Math.max(maxDiameter, 2*getObjectRadius(spacetime[i]))
+					}
+					var minCellX = Math.floor(minPosX/maxDiameter);
+					var maxCellX = Math.floor(maxPosX/maxDiameter);
+					var minCellY = Math.floor(minPosY/maxDiameter);
+					var maxCellY = Math.floor(maxPosY/maxDiameter);
 
-								var joined = joinObjects(objectA, objectB);
+					for (var i=0; i<spacetime.length; i++) {
+						gridPosX = Math.floor(spacetime[i].x/maxDiameter);
+						gridPosY = Math.floor(spacetime[i].y/maxDiameter);
+						grid[gridPosX][gridPosY].push(i)
+					}
 
-								if (joined === true) {
-									return recursivelyJoinClusteringObjects();
+					for (var gridPosX = minCellX; gridPosX <= maxPosX; i++) {
+						for (var gridPosY = minCellY; gridPosY <= maxPosY; i++) {
+							for (var a = grid[gridPosX][gridPosY].length - 1; a >= 0; a--) {
+								var objectA = spacetime[grid[gridPosX][gridPosY][a]];
+
+								for (var b = spacetime.length - 1; b >= 0; b--) {
+									if (a !== b) {
+										var objectB = spacetime[grid[gridPosX][gridPosY][b]];
+
+										var joined = joinObjects(objectA, objectB);
+
+										if (joined === true) {
+											return recursivelyJoinClusteringObjects();
+										};
+									};
 								};
 							};
-						};
-					};
+						}
+					}
+
+
 				}
 
 				recursivelyJoinClusteringObjects();
