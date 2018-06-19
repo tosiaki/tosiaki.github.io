@@ -643,7 +643,7 @@ define([
 									for (var a = grid[gridPosX][gridPosY].length - 1; a >= 0; a--) {
 										var objectA = spacetime[grid[gridPosX][gridPosY][a]];
 										for (var relPosX = -1; relPosX <= 1; relPosX++) {
-											for (var relPosY = -1; relPosX <= 1; relPosX++) {
+											for (var relPosY = -1; relPosY <= 1; relPosY++) {
 												if (grid[gridPosX+relPosX] && grid[gridPosX+relPosX][gridPosY+relPosY]) {
 													for (var b = grid[gridPosX+relPosX][gridPosY+relPosY].length - 1; b >= 0; b--) {
 														if (a !== b) {
