@@ -647,7 +647,6 @@ define([
 												if (grid[gridPosX+relPosX] && grid[gridPosX+relPosX][gridPosY+relPosY]) {
 													for (var b = grid[gridPosX+relPosX][gridPosY+relPosY].length - 1; b >= 0; b--) {
 														if (a !== b) {
-															debugger;
 															var objectB = spacetime[grid[gridPosX+relPosX][gridPosY+relPosY][b]];
 
 															var joined = joinObjects(objectA, objectB);
