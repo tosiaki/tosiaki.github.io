@@ -607,10 +607,10 @@ define([
 				// | Find clustering objects and join them |
 				// -----------------------------------------
 				function recursivelyJoinClusteringObjects(){
-					maxPosX = 0;
-					minPosX = 0;
-					maxPosY = 0;
-					minPosY = 0;
+					maxPosX = spacetime[0];
+					minPosX = spacetime[0];
+					maxPosY = spacetime[0];
+					minPosY = spacetime[0];
 					var maxDiameter = 0.1;
 					var grid = [];
 
@@ -629,45 +629,40 @@ define([
 					var maxCellY = Math.floor(maxPosY/maxDiameter);
 
 
-					debugger
-					var teststuff=false;
-					if (teststuff) {
-						for (var i=0; i<spacetime.length; i++) {
-							gridPosX = Math.floor(spacetime[i].x/maxDiameter);
-							gridPosY = Math.floor(spacetime[i].y/maxDiameter);
-							grid[gridPosX] = grid[gridPosX] || [];
-							grid[gridPosX][gridPosY] = grid[gridPosX][gridPosY] || [];
-							grid[gridPosX][gridPosY].push(i)
-						}
-						debugger;
+					for (var i=0; i<spacetime.length; i++) {
+						gridPosX = Math.floor(spacetime[i].x/maxDiameter);
+						gridPosY = Math.floor(spacetime[i].y/maxDiameter);
+						grid[gridPosX] = grid[gridPosX] || [];
+						grid[gridPosX][gridPosY] = grid[gridPosX][gridPosY] || [];
+						grid[gridPosX][gridPosY].push(i)
+					}
 
-						for (var gridPosX = minCellX; gridPosX <= maxPosX; i++) {
-							if (grid[gridPosX]) {
-								for (var gridPosY = minCellY; gridPosY <= maxPosY; i++) {
-									if (grid[gridPosX][gridPosY]) {
-										for (var a = grid[gridPosX][gridPosY].length - 1; a >= 0; a--) {
-											var objectA = spacetime[grid[gridPosX][gridPosY][a]];
-											for (var relPosX = -1; relPosX <= 1; relPosX++) {
-												for (var relPosY = -1; relPosX <= 1; relPosX++) {
-													if (grid[gridPosX+relPosX] && grid[gridPosX+relPosX][gridPosY+relPosY]) {
-														for (var b = grid[gridPosX+relPosX][gridPosY+relPosY].length - 1; b >= 0; b--) {
-															if (a !== b) {
-																debugger;
-																var objectB = spacetime[grid[gridPosX+relPosX][gridPosY+relPosY][b]];
+					for (var gridPosX = minCellX; gridPosX <= maxPosX; gridPosX++) {
+						if (grid[gridPosX]) {
+							for (var gridPosY = minCellY; gridPosY <= maxPosY; gridPosY++) {
+								if (grid[gridPosX][gridPosY]) {
+									for (var a = grid[gridPosX][gridPosY].length - 1; a >= 0; a--) {
+										var objectA = spacetime[grid[gridPosX][gridPosY][a]];
+										for (var relPosX = -1; relPosX <= 1; relPosX++) {
+											for (var relPosY = -1; relPosX <= 1; relPosX++) {
+												if (grid[gridPosX+relPosX] && grid[gridPosX+relPosX][gridPosY+relPosY]) {
+													for (var b = grid[gridPosX+relPosX][gridPosY+relPosY].length - 1; b >= 0; b--) {
+														if (a !== b) {
+															debugger;
+															var objectB = spacetime[grid[gridPosX+relPosX][gridPosY+relPosY][b]];
 
-																var joined = joinObjects(objectA, objectB);
+															var joined = joinObjects(objectA, objectB);
 
-																if (joined === true) {
-																	return recursivelyJoinClusteringObjects();
-																};
+															if (joined === true) {
+																return recursivelyJoinClusteringObjects();
 															};
 														};
-													}
+													};
 												}
 											}
+										}
 
-										};
-									}
+									};
 								}
 							}
 						}
