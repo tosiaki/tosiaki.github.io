@@ -607,10 +607,10 @@ define([
 				// | Find clustering objects and join them |
 				// -----------------------------------------
 				function recursivelyJoinClusteringObjects(){
-					maxPosX = spacetime[0];
-					minPosX = spacetime[0];
-					maxPosY = spacetime[0];
-					minPosY = spacetime[0];
+					maxPosX = spacetime[0].x;
+					minPosX = spacetime[0].x;
+					maxPosY = spacetime[0].y;
+					minPosY = spacetime[0].y;
 					var maxDiameter = 0.1;
 					var grid = [];
 
