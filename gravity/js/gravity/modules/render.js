@@ -10,7 +10,7 @@ define(['jquery', 'underscore'], function($, _){
 	var canvas 			= undefined;
 	var ctx 			= undefined;
 	var renderLoop  	= undefined; 
-	var fps				= 10;
+	var fps				= 30;
 	var massMultiplier 	= undefined; // Object size multiplier
 	var mouse = {
 		visible: false
