@@ -639,18 +639,22 @@ define([
 						for (var gridPosY = minCellY; gridPosY <= maxPosY; i++) {
 							for (var a = grid[gridPosX][gridPosY].length - 1; a >= 0; a--) {
 								var objectA = spacetime[grid[gridPosX][gridPosY][a]];
+								for (var relPosX = -1; relPosX <= 1; relPosX++) {
+									for (var relPosY = -1; relPosX <= 1; relPosX++) {
+										for (var b = grid[gridPosX+relPosX][gridPosY+relPosY].length - 1; b >= 0; b--) {
+											if (a !== b) {
+												var objectB = spacetime[grid[gridPosX+relPosX][gridPosY+relPosY][b]];
 
-								for (var b = spacetime.length - 1; b >= 0; b--) {
-									if (a !== b) {
-										var objectB = spacetime[grid[gridPosX][gridPosY][b]];
+												var joined = joinObjects(objectA, objectB);
 
-										var joined = joinObjects(objectA, objectB);
-
-										if (joined === true) {
-											return recursivelyJoinClusteringObjects();
+												if (joined === true) {
+													return recursivelyJoinClusteringObjects();
+												};
+											};
 										};
-									};
-								};
+									}
+								}
+
 							};
 						}
 					}
