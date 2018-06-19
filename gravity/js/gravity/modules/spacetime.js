@@ -416,8 +416,6 @@ define([
 		// Loops through all objects and calculates the delta velocity from gravitational forces
 		function calculateObjectForce(){
 
-			bnBuildTree();
-			forceBNtree();
 			// updateVel(calculationSpeed);
 
 			
@@ -615,23 +613,25 @@ define([
 					minPosY = 0;
 					var maxDiameter = 0.1;
 					var grid = [];
+
+					for (var i=0; i<spacetime.length; i++) {
+						maxPosX = Math.max(maxPosX, spacetime[i].x);
+						minPosX = Math.min(minPosX, spacetime[i].x);
+						maxPosY = Math.max(maxPosY, spacetime[i].y);
+						minPosY = Math.min(minPosY, spacetime[i].y);
+						maxDiameter = Math.max(maxDiameter, 2*getObjectRadius(spacetime[i]))
+					}
+					bnBuildTree();
+
+					var minCellX = Math.floor(minPosX/maxDiameter);
+					var maxCellX = Math.floor(maxPosX/maxDiameter);
+					var minCellY = Math.floor(minPosY/maxDiameter);
+					var maxCellY = Math.floor(maxPosY/maxDiameter);
+
+
 					debugger
-
-					var teststuff=0;
+					var teststuff=false;
 					if (teststuff) {
-
-						for (var i=0; i<spacetime.length; i++) {
-							maxPosX = Math.max(maxPosX, spacetime[i].x);
-							minPosX = Math.min(minPosX, spacetime[i].x);
-							maxPosY = Math.max(maxPosY, spacetime[i].y);
-							minPosY = Math.min(minPosY, spacetime[i].y);
-							maxDiameter = Math.max(maxDiameter, 2*getObjectRadius(spacetime[i]))
-						}
-						var minCellX = Math.floor(minPosX/maxDiameter);
-						var maxCellX = Math.floor(maxPosX/maxDiameter);
-						var minCellY = Math.floor(minPosY/maxDiameter);
-						var maxCellY = Math.floor(maxPosY/maxDiameter);
-
 						for (var i=0; i<spacetime.length; i++) {
 							gridPosX = Math.floor(spacetime[i].x/maxDiameter);
 							gridPosY = Math.floor(spacetime[i].y/maxDiameter);
@@ -684,7 +684,8 @@ define([
 				// ----------------------------------------
 
 				// Calculate gravitational forces between all objects
-				calculateObjectForce();
+				// calculateObjectForce();
+				forceBNtree();
 
 				// Apply delta velocity to all objects
 				applyObjectForce();
