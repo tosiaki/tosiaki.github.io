@@ -613,8 +613,7 @@ define([
 					minPosX = 0;
 					maxPosY = 0;
 					minPosY = 0;
-					maxDiameter = 0.1;
-					cellSize = 0;
+					var maxDiameter = 0.1;
 					var grid = [];
 
 					for (var i=0; i<spacetime.length; i++) {
@@ -636,7 +635,7 @@ define([
 						grid[gridPosX][gridPosY] = grid[gridPosX][gridPosY] || [];
 						grid[gridPosX][gridPosY].push(i)
 					}
-					debugger
+					debugger;
 
 					for (var gridPosX = minCellX; gridPosX <= maxPosX; i++) {
 						if (grid[gridPosX]) {
@@ -649,7 +648,7 @@ define([
 												if (grid[gridPosX+relPosX] && grid[gridPosX+relPosX][gridPosY+relPosY]) {
 													for (var b = grid[gridPosX+relPosX][gridPosY+relPosY].length - 1; b >= 0; b--) {
 														if (a !== b) {
-															debugger
+															debugger;
 															var objectB = spacetime[grid[gridPosX+relPosX][gridPosY+relPosY][b]];
 
 															var joined = joinObjects(objectA, objectB);
