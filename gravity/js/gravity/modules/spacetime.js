@@ -640,13 +640,15 @@ define([
 
 					for (gridPosX in grid) {
 						for (gridPosY in grid[gridPosX]) {
+							gridPosX = parseInt(gridPosX, 10);
+							gridPosY = parseInt(gridPosY, 10);
 							for (var a = grid[gridPosX][gridPosY].length - 1; a >= 0; a--) {
 								var objectA = spacetime[grid[gridPosX][gridPosY][a]];
 								for (var relPosX = -1; relPosX <= 1; relPosX++) {
 									for (var relPosY = -1; relPosY <= 1; relPosY++) {
 										if (grid[gridPosX+relPosX] && grid[gridPosX+relPosX][gridPosY+relPosY]) {
 											for (var b = grid[gridPosX+relPosX][gridPosY+relPosY].length - 1; b >= 0; b--) {
-												if (a !== b) {
+												if (grid[gridPosX][gridPosY][a] !== grid[gridPosX+relPosX][gridPosY+relPosY][b]) {
 													var objectB = spacetime[grid[gridPosX+relPosX][gridPosY+relPosY][b]];
 
 													var joined = joinObjects(objectA, objectB);
@@ -662,7 +664,7 @@ define([
 							};
 						}
 					}
-					
+
 				}
 
 				recursivelyJoinClusteringObjects();
