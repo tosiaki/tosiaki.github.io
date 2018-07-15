@@ -638,38 +638,31 @@ define([
 						grid[gridPosX][gridPosY].push(i)
 					}
 
-					for (var gridPosX = minCellX; gridPosX <= maxCellX; gridPosX++) {
-						if (grid[gridPosX]) {
-							for (var gridPosY = minCellY; gridPosY <= maxCellY; gridPosY++) {
-								if (grid[gridPosX][gridPosY]) {
-									for (var a = grid[gridPosX][gridPosY].length - 1; a >= 0; a--) {
-										var objectA = spacetime[grid[gridPosX][gridPosY][a]];
-										for (var relPosX = -1; relPosX <= 1; relPosX++) {
-											for (var relPosY = -1; relPosY <= 1; relPosY++) {
-												if (grid[gridPosX+relPosX] && grid[gridPosX+relPosX][gridPosY+relPosY]) {
-													for (var b = grid[gridPosX+relPosX][gridPosY+relPosY].length - 1; b >= 0; b--) {
-														if (a !== b) {
-															var objectB = spacetime[grid[gridPosX+relPosX][gridPosY+relPosY][b]];
+					for (gridPosX in grid) {
+						for (gridPosY in grid[gridPosX]) {
+							for (var a = grid[gridPosX][gridPosY].length - 1; a >= 0; a--) {
+								var objectA = spacetime[grid[gridPosX][gridPosY][a]];
+								for (var relPosX = -1; relPosX <= 1; relPosX++) {
+									for (var relPosY = -1; relPosY <= 1; relPosY++) {
+										if (grid[gridPosX+relPosX] && grid[gridPosX+relPosX][gridPosY+relPosY]) {
+											for (var b = grid[gridPosX+relPosX][gridPosY+relPosY].length - 1; b >= 0; b--) {
+												if (a !== b) {
+													var objectB = spacetime[grid[gridPosX+relPosX][gridPosY+relPosY][b]];
 
-															var joined = joinObjects(objectA, objectB);
+													var joined = joinObjects(objectA, objectB);
 
-															if (joined === true) {
-																return recursivelyJoinClusteringObjects();
-															};
-														};
+													if (joined === true) {
+														return recursivelyJoinClusteringObjects();
 													};
-												}
-											}
+												};
+											};
 										}
-
-									};
+									}
 								}
-							}
+							};
 						}
 					}
-
-
-
+					
 				}
 
 				recursivelyJoinClusteringObjects();
