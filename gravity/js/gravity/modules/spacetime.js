@@ -151,11 +151,11 @@ define([
 						cameraFocus: 	false,
 						x: 				-x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
 						y: 				-y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
-						velX: 			-velX+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
-						velY: 			-velY+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
+						velX: 			-velX+Math.random(); //Math.sqrt(mass)*(Math.random()-0.5)*2.4,
+						velY: 			-velY+Math.random(); //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
 						accY: 0,
-						mass: 			mass*Math.random(), 
+						mass: 			0.1*Math.random(), 
 						density: 		density,
 						path: 			[]
 					});
