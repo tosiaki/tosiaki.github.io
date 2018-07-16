@@ -624,12 +624,6 @@ define([
 						maxDiameter = Math.max(maxDiameter, 2*getObjectRadius(spacetime[i]))
 					}
 
-					var minCellX = Math.floor(minPosX/maxDiameter);
-					var maxCellX = Math.floor(maxPosX/maxDiameter);
-					var minCellY = Math.floor(minPosY/maxDiameter);
-					var maxCellY = Math.floor(maxPosY/maxDiameter);
-
-
 					for (var i=0; i<spacetime.length; i++) {
 						gridPosX = Math.floor(spacetime[i].x/maxDiameter);
 						gridPosY = Math.floor(spacetime[i].y/maxDiameter);
