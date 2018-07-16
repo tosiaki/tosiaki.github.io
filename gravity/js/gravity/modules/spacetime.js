@@ -484,16 +484,16 @@ define([
 				object.velX += object.accX * calculationSpeed;
 				object.velY += object.accY * calculationSpeed;
 
-				if(object.x > 20*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[1] && object.velX > 0) {
+				if(object.x > 30*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[1] && object.velX > 0) {
 					object.velX = 0;
 				}
-				if(object.x < -20*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[1] && object.velX < 0) {
+				if(object.x < -30*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[1] && object.velX < 0) {
 					object.velX = 0;
 				}
-				if(object.y > 20*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[2] && object.velY > 0) {
+				if(object.y > 30*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[2] && object.velY > 0) {
 					object.velY = 0;
 				}
-				if(object.y < -20*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[2] && object.velY < 0) {
+				if(object.y < -30*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[2] && object.velY < 0) {
 					object.velY = 0;
 				}
 
@@ -609,10 +609,18 @@ define([
 				// | Find clustering objects and join them |
 				// -----------------------------------------
 				function recursivelyJoinClusteringObjects(){
+					maxPosX = spacetime[0].x;
+					minPosX = spacetime[0].x;
+					maxPosY = spacetime[0].y;
+					minPosY = spacetime[0].y;
 					var maxDiameter = 0.1;
 					var grid = [];
 
 					for (var i=0; i<spacetime.length; i++) {
+						maxPosX = Math.max(maxPosX, spacetime[i].x);
+						minPosX = Math.min(minPosX, spacetime[i].x);
+						maxPosY = Math.max(maxPosY, spacetime[i].y);
+						minPosY = Math.min(minPosY, spacetime[i].y);
 						maxDiameter = Math.max(maxDiameter, 2*getObjectRadius(spacetime[i]))
 					}
 
