@@ -484,16 +484,16 @@ define([
 				object.velX += object.accX * calculationSpeed;
 				object.velY += object.accY * calculationSpeed;
 
-				if(object.x > 2000*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[1] && object.velX > 0) {
+				if(object.x > 400*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[1] && object.velX > 0) {
 					object.velX = 0;
 				}
-				if(object.x < -2000*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[1] && object.velX < 0) {
+				if(object.x < -400*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[1] && object.velX < 0) {
 					object.velX = 0;
 				}
-				if(object.y > 2000*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[2] && object.velY > 0) {
+				if(object.y > 400*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[2] && object.velY > 0) {
 					object.velY = 0;
 				}
-				if(object.y < -2000*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[2] && object.velY < 0) {
+				if(object.y < -400*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[2] && object.velY < 0) {
 					object.velY = 0;
 				}
 
@@ -648,7 +648,7 @@ define([
 									for (var relPosY = -1; relPosY <= 1; relPosY++) {
 										if (grid[gridPosX+relPosX] && grid[gridPosX+relPosX][gridPosY+relPosY]) {
 											for (var b = grid[gridPosX+relPosX][gridPosY+relPosY].length - 1; b >= 0; b--) {
-												if (grid[gridPosX][gridPosY][a] !== grid[gridPosX+relPosX][gridPosY+relPosY][b]) {
+												if (relPosX != 0 || relPosY !=0 || a != b ) {
 													var objectB = spacetime[grid[gridPosX+relPosX][gridPosY+relPosY][b]];
 
 													var joined = joinObjects(objectA, objectB);
