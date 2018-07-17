@@ -484,7 +484,7 @@ define([
 				object.velX += object.accX * calculationSpeed;
 				object.velY += object.accY * calculationSpeed;
 
-				energy = 0.5*(object.velX*object.velX+object.velY*object.velY) - bnRoot.CoM[0]/Math.sqrt((object.x-bnRoot.CoM[1])*(object.x-bnRoot.CoM[1])+(object.y-bnRoot.CoM[2])*(object.y-bnRoot.CoM[2]);
+				energy = 0.5*(object.velX*object.velX+object.velY*object.velY) - bnRoot.CoM[0]/Math.sqrt((object.x-bnRoot.CoM[1])*(object.x-bnRoot.CoM[1])+(object.y-bnRoot.CoM[2])*(object.y-bnRoot.CoM[2]));
 
 				if (energy > 0) {
 					if(object.x > 200*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[1] && object.velX > 0) {
