@@ -126,7 +126,7 @@ define([
         }
 		var deg = Math.atan2(y - focusedObject.y, x - focusedObject.x);
 
-		var meanOrbitalVelocity = Math.sqrt(focusedObject.mass / Math.sqrt(Math.pow(focusedObject.x - x, 2) + Math.pow(focusedObject.y - y, 2)))
+		var meanOrbitalVelocity = 4*Math.sqrt(focusedObject.mass / Math.sqrt(Math.pow(focusedObject.x - x, 2) + Math.pow(focusedObject.y - y, 2)))
 
 		var velX = (function () {
 			var velX = focusedObject.velX;
