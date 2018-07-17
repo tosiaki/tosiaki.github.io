@@ -146,7 +146,7 @@ define([
 					path: 			path
 				});
 
-				if(spacetime.length < 2000) {
+				if(spacetime.length < 10) {
 					var newObject2 = new objectConstructor({
 						cameraFocus: 	false,
 						x: 				-x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
@@ -484,17 +484,17 @@ define([
 				object.velX += object.accX * calculationSpeed;
 				object.velY += object.accY * calculationSpeed;
 
-				if(object.x > 30*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[1] && object.velX > 0) {
-					object.velX = 0;
+				if(object.x > 200*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[1] && object.velX > 0) {
+					object.velX -= 1;
 				}
-				if(object.x < -30*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[1] && object.velX < 0) {
-					object.velX = 0;
+				if(object.x < -200*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[1] && object.velX < 0) {
+					object.velX += 1;
 				}
-				if(object.y > 30*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[2] && object.velY > 0) {
-					object.velY = 0;
+				if(object.y > 200*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[2] && object.velY > 0) {
+					object.velY -= 1;
 				}
-				if(object.y < -30*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[2] && object.velY < 0) {
-					object.velY = 0;
+				if(object.y < -200*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[2] && object.velY < 0) {
+					object.velY += 1;
 				}
 
 				object.x += object.velX * calculationSpeed;
