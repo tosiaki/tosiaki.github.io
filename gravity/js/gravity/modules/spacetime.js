@@ -485,16 +485,16 @@ define([
 				object.velY += object.accY * calculationSpeed;
 
 				if(object.x > 200*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[1] && object.velX > 0) {
-					object.velX -= 1;
+					object.velX -= 0.01;
 				}
 				if(object.x < -200*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[1] && object.velX < 0) {
-					object.velX += 1;
+					object.velX += 0.01;
 				}
 				if(object.y > 200*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[2] && object.velY > 0) {
-					object.velY -= 1;
+					object.velY -= 0.01;
 				}
 				if(object.y < -200*Math.sqrt(bnRoot.CoM[0]) + bnRoot.CoM[2] && object.velY < 0) {
-					object.velY += 1;
+					object.velY += 0.01;
 				}
 
 				object.x += object.velX * calculationSpeed;
