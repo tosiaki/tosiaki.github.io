@@ -390,8 +390,8 @@ define([
 		
 		function getForceVec(i,j) {
 			if (getObjectDistance(spacetime[i], spacetime[j]) < getObjectRadius(spacetime[i]) + getObjectRadius(spacetime[j])) {
-				dx = spacetime[i].x - spacetime[j].x;
-				dy = spacetime[i].y - spacetime[j].y;
+				dx = spacetime[j].x - spacetime[i].x;
+				dy = spacetime[j].y - spacetime[i].y;
 				F = G*spacetime[i].mass*spacetime[j].mass/Math.pow(getObjectRadius(spacetime[i]) + getObjectRadius(spacetime[j]),GFACTOR);
 				return [ F*dx , F*dy ];
 			}
