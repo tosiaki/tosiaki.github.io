@@ -389,7 +389,7 @@ define([
 		
 		function getForceVec(i,j) {
 			if (getObjectDistance(spacetime[i], spacetime[j]) < getObjectRadius(spacetime[i]) + getObjectRadius(spacetime[j])) {
-				return 0;
+				return [0,0];
 			}
 			else {
 				return getForceVecDirect(
