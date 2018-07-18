@@ -102,7 +102,8 @@ define([
 		// Takes in two objects, joins them if they're within eachothers radius
 		function joinObjects(objectA, objectB){
 			if (
-				getObjectDistance(objectA, objectB) < getObjectRadius(objectA) + getObjectRadius(objectB)
+				getObjectDistance(objectA, objectB) < getObjectRadius(objectA) + getObjectRadius(objectB) &&
+				(objectA.velX-objectB.velX)*(objectA.velX-objectB.velX)+(objectA.velY-objectB.velY)*(objectA.velY-objectB.velY) < objectA.mass*objectB.mass/5
 			){
 				// Splice the objects from spacetime
 				spacetime = _.without(spacetime, objectA);
@@ -389,7 +390,10 @@ define([
 		
 		function getForceVec(i,j) {
 			if (getObjectDistance(spacetime[i], spacetime[j]) < getObjectRadius(spacetime[i]) + getObjectRadius(spacetime[j])) {
-				return [0,0];
+				dx = spacetime[i].x - spacetime[j].x;
+				dy = spacetime[i].y - spacetime[j].y;
+				F = G*spacetime[i].mass*spacetime[j].mass/Math.pow(getObjectRadius(spacetime[i]) + getObjectRadius(spacetime[j]),GFACTOR);
+				return [ F*dx , F*dy ];
 			}
 			else {
 				return getForceVecDirect(
@@ -622,18 +626,18 @@ define([
 					minPosX = spacetime[0].x;
 					maxPosY = spacetime[0].y;
 					minPosY = spacetime[0].y;
-					// var maxDiameter = 0.1;
-					// var grid = [];
+					var maxDiameter = 0.1;
+					var grid = [];
 
 					for (var i=0; i<spacetime.length; i++) {
 						maxPosX = Math.max(maxPosX, spacetime[i].x);
 						minPosX = Math.min(minPosX, spacetime[i].x);
 						maxPosY = Math.max(maxPosY, spacetime[i].y);
 						minPosY = Math.min(minPosY, spacetime[i].y);
-						// maxDiameter = Math.max(maxDiameter, 2*getObjectRadius(spacetime[i]))
+						maxDiameter = Math.max(maxDiameter, 2*getObjectRadius(spacetime[i]))
 					}
 
-					/*
+					
 
 					for (var i=0; i<spacetime.length; i++) {
 						gridPosX = Math.floor(spacetime[i].x/maxDiameter);
@@ -669,7 +673,7 @@ define([
 							};
 						}
 					}
-					*/
+					
 
 				}
 
