@@ -622,16 +622,18 @@ define([
 					minPosX = spacetime[0].x;
 					maxPosY = spacetime[0].y;
 					minPosY = spacetime[0].y;
-					var maxDiameter = 0.1;
-					var grid = [];
+					// var maxDiameter = 0.1;
+					// var grid = [];
 
 					for (var i=0; i<spacetime.length; i++) {
 						maxPosX = Math.max(maxPosX, spacetime[i].x);
 						minPosX = Math.min(minPosX, spacetime[i].x);
 						maxPosY = Math.max(maxPosY, spacetime[i].y);
 						minPosY = Math.min(minPosY, spacetime[i].y);
-						maxDiameter = Math.max(maxDiameter, 2*getObjectRadius(spacetime[i]))
+						// maxDiameter = Math.max(maxDiameter, 2*getObjectRadius(spacetime[i]))
 					}
+
+					/*
 
 					for (var i=0; i<spacetime.length; i++) {
 						gridPosX = Math.floor(spacetime[i].x/maxDiameter);
@@ -667,10 +669,11 @@ define([
 							};
 						}
 					}
+					*/
 
 				}
 
-				// recursivelyJoinClusteringObjects();
+				recursivelyJoinClusteringObjects();
 
 				// ----------------------------------------
 				// | Newtons law of universal gravitation |
