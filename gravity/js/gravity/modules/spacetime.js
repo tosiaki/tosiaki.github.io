@@ -388,9 +388,14 @@ define([
 		}
 		
 		function getForceVec(i,j) {
-			return getForceVecDirect(
+			if (getObjectDistance(spacetime[i], spacetime[j]) < getObjectRadius(spacetime[i]) + getObjectRadius(spacetime[j])) {
+				return 0;
+			}
+			else {
+				return getForceVecDirect(
 				spacetime[i].mass,spacetime[i].x,spacetime[i].y,
 				spacetime[j].mass,spacetime[j].x,spacetime[j].y);
+			}
 		}
 
 		function getForceVecDirect(m,x,y,m2,x2,y2) {
@@ -665,7 +670,7 @@ define([
 
 				}
 
-				recursivelyJoinClusteringObjects();
+				// recursivelyJoinClusteringObjects();
 
 				// ----------------------------------------
 				// | Newtons law of universal gravitation |
