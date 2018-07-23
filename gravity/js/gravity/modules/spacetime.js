@@ -102,8 +102,8 @@ define([
 		// Takes in two objects, joins them if they're within eachothers radius
 		function joinObjects(objectA, objectB){
 			if (
-				getObjectDistance(objectA, objectB) < getObjectRadius(objectA) + getObjectRadius(objectB) &&
-				(objectA.velX-objectB.velX)*(objectA.velX-objectB.velX)+(objectA.velY-objectB.velY)*(objectA.velY-objectB.velY) < objectA.mass*objectB.mass/5
+				getObjectDistance(objectA, objectB) < getObjectRadius(objectA) + getObjectRadius(objectB) /* &&
+				(objectA.velX-objectB.velX)*(objectA.velX-objectB.velX)+(objectA.velY-objectB.velY)*(objectA.velY-objectB.velY) < objectA.mass*objectB.mass/5 */
 			){
 				// Splice the objects from spacetime
 				spacetime = _.without(spacetime, objectA);
@@ -147,16 +147,16 @@ define([
 					path: 			path
 				});
 
-				if(spacetime.length < 10) {
+				if(spacetime.length < 400) {
 					var newObject2 = new objectConstructor({
 						cameraFocus: 	false,
-						x: 				-x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
-						y: 				-y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
-						velX: 			-velX+Math.random(), //Math.sqrt(mass)*(Math.random()-0.5)*2.4,
-						velY: 			-velY+Math.random(), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
+						x: 				40*Math.sqrt(bnRoot.CoM[0])*Math.random() + bnRoot.CoM[1], // -x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
+						y: 				40*Math.sqrt(bnRoot.CoM[0])*Math.random() + bnRoot.CoM[2], // -y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
+						velX: 			2*Math.random(), //Math.sqrt(mass)*(Math.random()-0.5)*2.4,
+						velY: 			2*Math.random(), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
 						accY: 0,
-						mass: 			0.1*Math.random(), 
+						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*bnRoot.CoM[0], 
 						density: 		density,
 						path: 			[]
 					});
