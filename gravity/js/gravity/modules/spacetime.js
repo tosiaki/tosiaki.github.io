@@ -156,7 +156,7 @@ define([
 						velY: 			2*Math.random(), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
 						accY: 0,
-						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*bnRoot.CoM[0], 
+						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*10, 
 						density: 		density,
 						path: 			[]
 					});
