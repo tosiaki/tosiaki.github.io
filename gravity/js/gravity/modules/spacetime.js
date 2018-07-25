@@ -148,12 +148,16 @@ define([
 				});
 
 				if(spacetime.length < 1400) {
+					distance = 40*Math.sqrt(bnRoot.CoM[0])*(Math.random()/2+1);
+					angle = 2*Math.PI*Math.random();
+					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
+					direction = 2*Math.PI*Math.random();
 					var newObject2 = new objectConstructor({
 						cameraFocus: 	false,
-						x: 				40*Math.sqrt(bnRoot.CoM[0])*(Math.random()-0.5) + bnRoot.CoM[1], // -x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
-						y: 				40*Math.sqrt(bnRoot.CoM[0])*(Math.random()-0.5) + bnRoot.CoM[2], // -y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
-						velX: 			2*(Math.random()-0.5), //Math.sqrt(mass)*(Math.random()-0.5)*2.4,
-						velY: 			2*(Math.random()-0.5), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
+						x: 				distance*Math.cos(angle) + bnRoot.CoM[1], // -x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
+						y: 				distance*Math.sin(angle) + bnRoot.CoM[2], // -y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
+						velX: 			speed*Math.cos(direction), //Math.sqrt(mass)*(Math.random()-0.5)*2.4,
+						velY: 			speed*Math.cos(direction), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
 						accY: 0,
 						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*10, 
