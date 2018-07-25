@@ -150,8 +150,8 @@ define([
 				if(spacetime.length < 1400) {
 					var newObject2 = new objectConstructor({
 						cameraFocus: 	false,
-						x: 				40*Math.sqrt(bnRoot.CoM[0])*Math.random() + bnRoot.CoM[1], // -x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
-						y: 				40*Math.sqrt(bnRoot.CoM[0])*Math.random() + bnRoot.CoM[2], // -y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
+						x: 				40*Math.sqrt(bnRoot.CoM[0])*(Math.random()-0.5) + bnRoot.CoM[1], // -x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
+						y: 				40*Math.sqrt(bnRoot.CoM[0])*(Math.random()-0.5) + bnRoot.CoM[2], // -y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
 						velX: 			2*(Math.random()-0.5), //Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						velY: 			2*(Math.random()-0.5), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
