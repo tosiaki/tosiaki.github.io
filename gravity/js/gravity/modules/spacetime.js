@@ -551,6 +551,8 @@ define([
 				object.velX += object.accX * calculationSpeed;
 				object.velY += object.accY * calculationSpeed;
 
+				/*
+
 				energy = 0.5*(object.velX*object.velX+object.velY*object.velY) - bnRoot.CoM[0]/Math.sqrt((object.x-bnRoot.CoM[1])*(object.x-bnRoot.CoM[1])+(object.y-bnRoot.CoM[2])*(object.y-bnRoot.CoM[2]));
 
 				if (energy > 0) {
@@ -568,6 +570,8 @@ define([
 					}
 				}
 
+				*/
+
 				object.x += object.velX * calculationSpeed;
 				object.y += object.velY * calculationSpeed;
 
@@ -577,6 +581,13 @@ define([
 				object.accX = 0;
 				object.accY = 0;
 			};
+
+			for (var i = 0; i < spacetime.length; i++) {
+				var object = spacetime[i];
+				if ((object.x-bnRoot.CoM[1])*(object.x-bnRoot.CoM[1]) + (object.y-bnRoot.CoM[2])*(object.y-bnRoot.CoM[2]) > bnRoot.CoM[0]*bnRoot.CoM[0]*200 ) {
+					spacetime = _.without(spacetime, object);
+				}
+			}
 		}
 
 	// ----------
