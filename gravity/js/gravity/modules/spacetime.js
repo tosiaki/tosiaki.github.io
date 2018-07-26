@@ -148,7 +148,7 @@ define([
 				});
 
 				if(spacetime.length < 8000) {
-					distance = 40*Math.sqrt(bnRoot.CoM[0])*(Math.random()/2+1);
+					distance = 100*Math.sqrt(bnRoot.CoM[0])*(Math.random()/2+1);
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
 					direction = 2*Math.PI*Math.random();
@@ -168,7 +168,7 @@ define([
 				}
 
 				if(spacetime.length < Math.sqrt(bnRoot.CoM[0])*6) {
-					distance = 40*Math.sqrt(bnRoot.CoM[0])*(Math.random()/2+1);
+					distance = 120*Math.sqrt(bnRoot.CoM[0])*(Math.random()/2+1);
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
 					direction = 2*Math.PI*Math.random();
@@ -185,7 +185,7 @@ define([
 						path: 			[]
 					});
 					addObject(newObject3);
-					distance = 60*Math.sqrt(bnRoot.CoM[0])*(Math.random()/2+1);
+					distance = 140*Math.sqrt(bnRoot.CoM[0])*(Math.random()/2+1);
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
 					direction = 2*Math.PI*Math.random();
@@ -202,7 +202,7 @@ define([
 						path: 			[]
 					});
 					addObject(newObject3);
-					distance = 70*Math.sqrt(bnRoot.CoM[0])*(Math.random()/2+1);
+					distance = 160*Math.sqrt(bnRoot.CoM[0])*(Math.random()/2+1);
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
 					direction = 2*Math.PI*Math.random();
