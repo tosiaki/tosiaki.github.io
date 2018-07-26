@@ -167,7 +167,7 @@ define([
 					addObject(newObject2);
 				}
 
-				if(spacetime.length < Math.sqrt(bnRoot.CoM[0])*6) {
+				if(spacetime.length < Math.sqrt(bnRoot.CoM[0])*6 && spacetime.length < 8000) {
 					distance = 30*Math.sqrt(bnRoot.CoM[0])*(Math.random()/2+1);
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
