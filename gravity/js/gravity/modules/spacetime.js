@@ -133,6 +133,10 @@ define([
 				// New path is a copy of the larger object's path
 				var path = objectA.mass >= objectB.mass ? objectA.path : objectB.path;
 
+				if (mass > bnRoot.CoM[0]/40) {
+					mass /= 2;
+				}
+
 				// Construct new object and add to spacetime
 				var newObject = new objectConstructor({
 					cameraFocus: 	cameraFocus,
@@ -142,7 +146,7 @@ define([
 					velY: 			velY,
 					accX: 0,
 					accY: 0,
-					mass: 			mass, 
+					mass: 			mass,
 					density: 		density,
 					path: 			path
 				});
