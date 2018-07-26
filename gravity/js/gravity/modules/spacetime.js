@@ -147,7 +147,7 @@ define([
 					path: 			path
 				});
 
-				if(spacetime.length < 1400) {
+				if(spacetime.length < 8000) {
 					distance = 40*Math.sqrt(bnRoot.CoM[0])*(Math.random()/2+1);
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
@@ -165,6 +165,26 @@ define([
 						path: 			[]
 					});
 					addObject(newObject2);
+				}
+
+				if(spacetime.length < Math.sqrt(bnRoot.CoM[0])*6) {
+					distance = 40*Math.sqrt(bnRoot.CoM[0])*(Math.random()/2+1);
+					angle = 2*Math.PI*Math.random();
+					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
+					direction = 2*Math.PI*Math.random();
+					var newObject3 = new objectConstructor({
+						cameraFocus: 	false,
+						x: 				distance*Math.cos(angle) + bnRoot.CoM[1], // -x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
+						y: 				distance*Math.sin(angle) + bnRoot.CoM[2], // -y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
+						velX: 			speed*Math.cos(direction), //Math.sqrt(mass)*(Math.random()-0.5)*2.4,
+						velY: 			speed*Math.cos(direction), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
+						accX: 0,
+						accY: 0,
+						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*10, 
+						density: 		density,
+						path: 			[]
+					});
+					addObject(newObject3);
 				}
 
 				addObject(newObject);
