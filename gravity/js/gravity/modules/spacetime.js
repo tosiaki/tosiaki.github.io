@@ -147,7 +147,7 @@ define([
 					path: 			path
 				});
 
-				if(spacetime.length < 8000) {
+				if(spacetime.length < 500) {
 					distance = 4*bnRoot.CoM[0]*(Math.random()/2+1);
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
@@ -167,7 +167,7 @@ define([
 					addObject(newObject2);
 				}
 
-				if(spacetime.length < Math.sqrt(bnRoot.CoM[0])*6 && spacetime.length < 8000) {
+				if(spacetime.length < Math.sqrt(bnRoot.CoM[0])*10 && spacetime.length < 500) {
 					distance = 4*bnRoot.CoM[0]*(Math.random()/2+1);
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
@@ -584,7 +584,7 @@ define([
 
 			for (var i = 0; i < spacetime.length; i++) {
 				var object = spacetime[i];
-				if ((object.x-bnRoot.CoM[1])*(object.x-bnRoot.CoM[1]) + (object.y-bnRoot.CoM[2])*(object.y-bnRoot.CoM[2]) > bnRoot.CoM[0]*bnRoot.CoM[0]*50 ) {
+				if ((object.x-bnRoot.CoM[1])*(object.x-bnRoot.CoM[1]) + (object.y-bnRoot.CoM[2])*(object.y-bnRoot.CoM[2]) > bnRoot.CoM[0]*bnRoot.CoM[0]*8 ) {
 					spacetime = _.without(spacetime, object);
 				}
 			}
