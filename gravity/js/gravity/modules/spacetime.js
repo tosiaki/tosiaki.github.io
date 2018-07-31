@@ -148,7 +148,7 @@ define([
 				});
 
 				if(spacetime.length < 500) {
-					distance = 2*bnRoot.CoM[0]*(Math.random()/2+1);
+					distance = 2*bnRoot.CoM[0]*Math.random();
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
 					direction = angle + Math.PI/2;
@@ -160,7 +160,7 @@ define([
 						velY: 			speed*Math.sin(direction), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
 						accY: 0,
-						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*10, 
+						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*25, 
 						density: 		density,
 						path: 			[]
 					});
@@ -168,7 +168,7 @@ define([
 				}
 
 				if(spacetime.length < Math.sqrt(bnRoot.CoM[0])*10 && spacetime.length < 500) {
-					distance = 2*bnRoot.CoM[0]*(Math.random()/2+1);
+					distance = 2*bnRoot.CoM[0]*Math.random();
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
 					direction = angle + Math.PI/2;
@@ -180,12 +180,12 @@ define([
 						velY: 			speed*Math.sin(direction), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
 						accY: 0,
-						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*10, 
+						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*25, 
 						density: 		density,
 						path: 			[]
 					});
 					addObject(newObject3);
-					distance = 2*bnRoot.CoM[0]*(Math.random()/2+1);
+					distance = 2*bnRoot.CoM[0]*Math.random();
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
 					direction = angle + Math.PI/2;
@@ -197,12 +197,12 @@ define([
 						velY: 			speed*Math.sin(direction), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
 						accY: 0,
-						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*10, 
+						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*25, 
 						density: 		density,
 						path: 			[]
 					});
 					addObject(newObject3);
-					distance = 2*bnRoot.CoM[0]*(Math.random()/2+1);
+					distance = 2*bnRoot.CoM[0]*Math.random();
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
 					direction = angle + Math.PI/2;
@@ -214,7 +214,7 @@ define([
 						velY: 			speed*Math.sin(direction), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
 						accY: 0,
-						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*10, 
+						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*25, 
 						density: 		density,
 						path: 			[]
 					});
