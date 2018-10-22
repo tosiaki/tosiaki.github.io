@@ -160,7 +160,7 @@ define([
 						velY: 			speed*Math.sin(direction), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
 						accY: 0,
-						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*25, 
+						mass: 			Math.random()*25, 
 						density: 		density,
 						path: 			[]
 					});
@@ -180,7 +180,7 @@ define([
 						velY: 			speed*Math.sin(direction), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
 						accY: 0,
-						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*25, 
+						mass: 			Math.random()*25, 
 						density: 		density,
 						path: 			[]
 					});
@@ -197,7 +197,7 @@ define([
 						velY: 			speed*Math.sin(direction), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
 						accY: 0,
-						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*25, 
+						mass: 			Math.random()*25, 
 						density: 		density,
 						path: 			[]
 					});
@@ -214,7 +214,7 @@ define([
 						velY: 			speed*Math.sin(direction), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
 						accY: 0,
-						mass: 			Math.random()*Math.random()*Math.random()*Math.random()*25, 
+						mass: 			Math.random()*25, 
 						density: 		density,
 						path: 			[]
 					});
