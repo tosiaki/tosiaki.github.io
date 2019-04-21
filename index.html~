@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<title>Fluctuation theorems</title>
+		<script src='/socket.io/socket.io.js'></script>
 		<script src="/fluctuation_theorems/socket_script.js"></script>
 	</head>
 	<body>
