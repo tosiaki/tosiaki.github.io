@@ -3,7 +3,7 @@ var socket = io("https://evening-springs-71938.herokuapp.com/");
 integralFluctuationAverages = {};
 
 socket.on("newVelocity", function(velocity) {
-	integralFluctuationAverages['result.velocity'] = { sum: 0, samples: 0 };
+	integralFluctuationAverages[velocity] = { sum: 0, samples: 0 };
 });
 
 socket.on("calculationResult", function(result) {
