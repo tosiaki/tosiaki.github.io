@@ -27,5 +27,5 @@ socket.on("calculationResult", function(result) {
 	fluctuationAverages.samples++;
 	console.log("Velocity: " + result.velocity + ", Average: " + fluctuationAverages.sum/fluctuationAverages.samples);
 	document.getElementById("box-" + result.velocity).getElementsByClassName('velocity')[0].innerHTML = result.velocity;
-	document.getElementById("box-" + result.samples).getElementsByClassName('samples')[0].innerHTML = result.samples;
+	document.getElementById("box-" + result.velocity).getElementsByClassName('samples')[0].innerHTML = result.samples;
 });
