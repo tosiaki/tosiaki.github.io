@@ -30,11 +30,11 @@ socket.on("calculationResult", function(result) {
 
 	}
 	elementName = "box-" + result.velocity;
+	data = {};
+	data[result.entropy] = 1;
 	document.getElementById(elementName).getElementsByClassName("histogram")[0].push({
 		time: Date.now(),
-		histogram: {
-			result.entropy: 1
-		}
+		histogram: data
 	});
 	fluctuationAverages = integralFluctuationAverages[result.velocity];
 	fluctuationAverages.sum += Math.exp(-result.entropy);
