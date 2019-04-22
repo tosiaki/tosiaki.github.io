@@ -80,9 +80,10 @@ socket.on("calculationResult", function(result) {
 	average = fluctuationAverages.sum/fluctuationAverages.samples;
 	// console.log("Velocity: " + result.velocity + ", Average: " + average); 
 	
+	workByPosition = fluctuationAverages.exponentialWorkByPosition;
 	result.workHistory.forEach(function(workEntry) {
-		workAtPosition.addData(workEntry.work, workEntry.position);
-		workAtPosition = fluctuationAverages.exponentialWorkByPosition[workEntry.position];
+		workByPosition.addData(workEntry.work, workEntry.position);
+		workByPosition = fluctuationAverages.exponentialWorkByPosition[workEntry.position];
 	});
 
 	document.getElementById(elementName).getElementsByClassName('integration-fluctionation-average')[0].innerHTML = average;
@@ -97,7 +98,7 @@ socket.on("calculationResult", function(result) {
 		chart_type: "histogram"
 	});
 	MG.data_graphic({
-		data: workAtPosition.getGraphingArray(),
+		data: workByPosition.getGraphingArray(),
 		width: 650,
 		height: 350,
 		target: "#energy-graph-" + result.velocity.toString().replace(".","\\."),
