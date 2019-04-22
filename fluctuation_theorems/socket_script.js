@@ -16,12 +16,12 @@ socket.on("calculationResult", function(result) {
 		var notice3 = document.createTextNode(' samples.');
 		var chart = document.createElement('div');
 		chart.setAttribute("class", "histogram");
-		chart.style.height = "100px";
-		chart.style.width = "100px";
-		chartJ = $(chart);
-		chartJ.epoch({
-			type: 'time.heatmap',
-			data: []
+		MG.data_graphic({
+			data: [],
+			width: 650,
+			height: 150,
+			target: "#box-"+result.velocity+".histogram",
+			x_accessor: 'entropy
 		});
 		document.body.appendChild(noticeBox);
 		noticeBox.appendChild(notice);
