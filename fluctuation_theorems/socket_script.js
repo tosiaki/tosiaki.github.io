@@ -23,8 +23,9 @@ WorkByPositionIndex.prototype.addData = function(work, position) {
 
 WorkByPositionIndex.prototype.getGraphingArray = function() {
 	returnData = [];
+	thisIndex = this;
 	this.positions.forEach(function(position) {
-		returnData.push({ position: position, estimateFreeEnergy: -Math.log(this[position].sum/this[position].samples)});
+		returnData.push({ position: position, estimateFreeEnergy: -Math.log(thisIndex[position].sum/thisIndex[position].samples)});
 	});
 	return returnData;
 }
