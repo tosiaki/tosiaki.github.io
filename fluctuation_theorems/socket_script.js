@@ -9,7 +9,7 @@ socket.on("calculationResult", function(result) {
 		noticeBox.setAttribute("id", "box-"+result.velocity);
 		var notice = document.createTextNode('For the velocity of ' + result.velocity + ', the average e^(-Delta S) is currently equal to ');
 		var velocityHolder = document.createElement('div');
-		velocityHolder.setAttribute("class", "integration-fluctionation-velocity");
+		velocityHolder.setAttribute("class", "integration-fluctionation-average");
 		var notice2 = document.createTextNode(' and currently has ');
 		var samplesHolder = document.createElement('div');
 		samplesHolder.setAttribute("class", "samples");
