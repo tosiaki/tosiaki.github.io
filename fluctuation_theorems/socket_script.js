@@ -21,7 +21,7 @@ socket.on("calculationResult", function(result) {
 			width: 650,
 			height: 150,
 			target: "#box-"+result.velocity+".histogram",
-			x_accessor: 'entropy'
+			chart_type: "histogram"
 		});
 		document.body.appendChild(noticeBox);
 		noticeBox.appendChild(notice);
@@ -31,19 +31,18 @@ socket.on("calculationResult", function(result) {
 		noticeBox.appendChild(notice3);
 		noticeBox.appendChild(chart);
 
+		fluctuationAverages.entropies = [];
 	}
 	elementName = "box-" + result.velocity;
-	data = {};
-	data[result.entropy] = 1;
-	document.getElementById(elementName).getElementsByClassName("histogram")[0].push({
-		time: Date.now(),
-		histogram: data
-	});
 	fluctuationAverages = integralFluctuationAverages[result.velocity];
 	fluctuationAverages.sum += Math.exp(-result.entropy);
+	fluctuationAverages.entropies.push(result.entropy);
 	fluctuationAverages.samples++;
 	average = fluctuationAverages.sum/fluctuationAverages.samples;
 	console.log("Velocity: " + result.velocity + ", Average: " + average); 
 	document.getElementById(elementName).getElementsByClassName('integration-fluctionation-average')[0].innerHTML = average;
 	document.getElementById(elementName).getElementsByClassName('samples')[0].innerHTML = fluctuationAverages.samples;
+	MG.data_graphic({
+		data: fluctuationAverages.entropies,
+	});
 });
