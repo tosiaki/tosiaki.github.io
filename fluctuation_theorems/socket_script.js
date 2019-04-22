@@ -91,6 +91,9 @@ socket.on("calculationResult", function(result) {
 	document.getElementById(elementName).getElementsByClassName('lowerings')[0].innerHTML = fluctuationAverages.entropyLowerings;
 	document.getElementById(elementName).getElementsByClassName('lowerings-proportion')[0].innerHTML = Number(100*fluctuationAverages.entropyLowerings/fluctuationAverages.samples).toFixed(3);
 	MG.data_graphic({
+		title: "Entropy changes for v = " + result.velocity,
+		x_label: "Delta S/kB",
+		y_label: "Count",
 		data: fluctuationAverages.entropies,
 		width: 650,
 		height: 350,
@@ -98,6 +101,9 @@ socket.on("calculationResult", function(result) {
 		chart_type: "histogram"
 	});
 	MG.data_graphic({
+		title: "Estimated free energies from experiments where v = " + result.velocity,
+		x_label: "Position",
+		y_label: "Delta F/kBT",
 		data: workByPosition.getGraphingArray(),
 		width: 650,
 		height: 350,
