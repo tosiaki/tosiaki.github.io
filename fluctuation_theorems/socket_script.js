@@ -16,7 +16,8 @@ socket.on("calculationResult", function(result) {
 		var notice3 = document.createTextNode(' samples.');
 		var chart = document.createElement('div');
 		chart.setAttribute("class", "histogram");
-		chart.epoch({
+		chartJ = $(chart);
+		chartJ.epoch({
 			type: 'time.heatmap',
 			data: []
 		});
