@@ -15,7 +15,7 @@ socket.on("calculationResult", function(result) {
 		samplesHolder.setAttribute("class", "samples");
 		var notice3 = document.createTextNode(' samples.');
 		var chart = document.createElement('div');
-		chart.setAttribute("class", "histogram");
+		chart.setAttribute("id", "histogram-" + result.velocity);
 
 		document.body.appendChild(noticeBox);
 		noticeBox.appendChild(notice);
@@ -38,7 +38,7 @@ socket.on("calculationResult", function(result) {
 		data: fluctuationAverages.entropies,
 		width: 650,
 		height: 150,
-		target: "#box-"+result.velocity+".histogram",
+		target: "histogram-" + result.velocity,
 		chart_type: "histogram"
 	});
 });
