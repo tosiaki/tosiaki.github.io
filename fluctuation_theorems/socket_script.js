@@ -4,7 +4,7 @@ integralFluctuationAverages = {};
 
 socket.on("calculationResult", function(result) {
 	if(integralFluctuationAverages[result.velocity] == null) {
-		integralFluctuationAverages[result.velocity] = { sum: 0, samples: 0 };
+		integralFluctuationAverages[result.velocity] = { sum: 0, samples: 0, entropies: [] };
 		var noticeBox = document.createElement('div');
 		noticeBox.setAttribute("id", "box-"+result.velocity);
 		var notice = document.createTextNode('For the velocity of ' + result.velocity + ', the average e^(-Delta S) is currently equal to ');
@@ -24,8 +24,6 @@ socket.on("calculationResult", function(result) {
 		noticeBox.appendChild(samplesHolder);
 		noticeBox.appendChild(notice3);
 		noticeBox.appendChild(chart);
-
-		fluctuationAverages.entropies = [];
 	}
 	elementName = "box-" + result.velocity;
 	fluctuationAverages = integralFluctuationAverages[result.velocity];
