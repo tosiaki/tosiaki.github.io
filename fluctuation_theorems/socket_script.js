@@ -2,25 +2,26 @@ var socket = io("https://evening-springs-71938.herokuapp.com/");
 
 integralFluctuationAverages = {};
 
-function workPositionEntry() {
+function WorkPositionEntry() {
 	this.sum = 0;
 	this.samples = 0;
 }
 
-function workByPositionIndex() {
+function WorkByPositionIndex() {
+	this.positions = [];
 }
 
-workByPositionIndex.prototype.initializePosition = function(position) {
-	this[position] = new workPositionEntry();
+WorkByPositionIndex.prototype.initializePosition = function(position) {
+	this[position] = new WorkPositionEntry();
 	this.positions.push(position);
 }
 
-workByPositionIndex.prototype.addData = function(work, position) {
+WorkByPositionIndex.prototype.addData = function(work, position) {
 	this[position].samples++;
 	this[position].sum += Math.exp(work);
 }
 
-workByPositionIndex.prototype.getGraphingArray = function() {
+WorkByPositionIndex.prototype.getGraphingArray = function() {
 	returnData = [];
 	this.positions.forEach(function(position) {
 		returnData.push({ position: position, estimateFreeEnergy: -Math.log(this[position].sum/this[position].samples)});
@@ -30,10 +31,10 @@ workByPositionIndex.prototype.getGraphingArray = function() {
 
 socket.on("calculationResult", function(result) {
 	if(integralFluctuationAverages[result.velocity] == null) {
-		workByPosition = new workByPositionIndex();
-		result.workHistory.forEach(workEntry) {
+		workByPosition = new WorkByPositionIndex();
+		result.workHistory.forEach(function (workEntry) {
 			workByPosition.initializePosition(workEntry.position);
-		}
+		});
 		integralFluctuationAverages[result.velocity] = { sum: 0, samples: 0, entropies: [], entropyLowerings: 0, exponentialWorkByPosition: workByPosition };
 		var noticeBox = document.createElement('div');
 		noticeBox.setAttribute("id", "box-"+result.velocity);
