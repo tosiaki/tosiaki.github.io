@@ -83,7 +83,6 @@ socket.on("calculationResult", function(result) {
 	workByPosition = fluctuationAverages.exponentialWorkByPosition;
 	result.workHistory.forEach(function(workEntry) {
 		workByPosition.addData(workEntry.work, workEntry.position);
-		workByPosition = fluctuationAverages.exponentialWorkByPosition[workEntry.position];
 	});
 
 	document.getElementById(elementName).getElementsByClassName('integration-fluctionation-average')[0].innerHTML = average;
