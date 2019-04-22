@@ -38,7 +38,7 @@ socket.on("calculationResult", function(result) {
 		data: fluctuationAverages.entropies,
 		width: 650,
 		height: 150,
-		target: "histogram-" + result.velocity,
+		target: "#histogram-" + result.velocity,
 		chart_type: "histogram"
 	});
 });
