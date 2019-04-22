@@ -48,7 +48,7 @@ socket.on("calculationResult", function(result) {
 	document.getElementById(elementName).getElementsByClassName('integration-fluctionation-average')[0].innerHTML = average;
 	document.getElementById(elementName).getElementsByClassName('samples')[0].innerHTML = fluctuationAverages.samples;
 	document.getElementById(elementName).getElementsByClassName('lowerings')[0].innerHTML = fluctuationAverages.entropyLowerings;
-	document.getElementById(elementName).getElementsByClassName('lowerings-proportion')[0].innerHTML = fluctuationAverages.entropyLowerings/fluctuationAverages.samples;
+	document.getElementById(elementName).getElementsByClassName('lowerings-proportion')[0].innerHTML = Number(100*fluctuationAverages.entropyLowerings/fluctuationAverages.samples).toFixed(3);
 	MG.data_graphic({
 		data: fluctuationAverages.entropies,
 		width: 650,
