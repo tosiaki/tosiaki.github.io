@@ -2,9 +2,39 @@ var socket = io("https://evening-springs-71938.herokuapp.com/");
 
 integralFluctuationAverages = {};
 
+function workPositionEntry() {
+	this.sum = 0;
+	this.samples = 0;
+}
+
+function workByPositionIndex() {
+}
+
+workByPositionIndex.prototype.initializePosition = function(position) {
+	this[position] = new workPositionEntry();
+	this.positions.push(position);
+}
+
+workByPositionIndex.prototype.addData = function(work, position) {
+	this[position].samples++;
+	this[position].sum += Math.exp(work);
+}
+
+workByPositionIndex.prototype.getGraphingArray = function() {
+	returnData = [];
+	this.positions.forEach(function(position) {
+		returnData.push({ position: position, estimateFreeEnergy: -Math.log(this[position].sum/this[position].samples)});
+	});
+	return returnData;
+}
+
 socket.on("calculationResult", function(result) {
 	if(integralFluctuationAverages[result.velocity] == null) {
-		integralFluctuationAverages[result.velocity] = { sum: 0, samples: 0, entropies: [], entropyLowerings: 0 };
+		workByPosition = new workByPositionIndex();
+		result.workHistory.forEach(workEntry) {
+			workByPosition.initializePosition(workEntry.position);
+		}
+		integralFluctuationAverages[result.velocity] = { sum: 0, samples: 0, entropies: [], entropyLowerings: 0, exponentialWorkByPosition: workByPosition };
 		var noticeBox = document.createElement('div');
 		noticeBox.setAttribute("id", "box-"+result.velocity);
 		var notice = document.createTextNode('For the velocity of ' + result.velocity + ', the average e^(-Delta S) is currently equal to ');
@@ -22,6 +52,8 @@ socket.on("calculationResult", function(result) {
 		var notice5 = document.createTextNode('%.');
 		var chart = document.createElement('div');
 		chart.setAttribute("id", "histogram-" + result.velocity);
+		var freeEnergyChart = document.createElement('div');
+		freeEnergyChart.setAttribute("id", "energy-graph-" + result.velocity);
 
 		document.body.appendChild(noticeBox);
 		noticeBox.appendChild(notice);
@@ -34,6 +66,7 @@ socket.on("calculationResult", function(result) {
 		noticeBox.appendChild(loweringsProportionHolder);
 		noticeBox.appendChild(notice5);
 		noticeBox.appendChild(chart);
+		noticeBox.appendChild(freeEnergyChart);
 	}
 	elementName = "box-" + result.velocity;
 	fluctuationAverages = integralFluctuationAverages[result.velocity];
@@ -44,7 +77,13 @@ socket.on("calculationResult", function(result) {
 		fluctuationAverages.entropyLowerings++;
 	}
 	average = fluctuationAverages.sum/fluctuationAverages.samples;
-	console.log("Velocity: " + result.velocity + ", Average: " + average); 
+	// console.log("Velocity: " + result.velocity + ", Average: " + average); 
+	
+	result.workHistory.forEach(function(workEntry) {
+		workAtPosition.addData(workEntry.work, workEntry.position);
+		workAtPosition = fluctuationAverages.exponentialWorkByPosition[workEntry.position];
+	});
+
 	document.getElementById(elementName).getElementsByClassName('integration-fluctionation-average')[0].innerHTML = average;
 	document.getElementById(elementName).getElementsByClassName('samples')[0].innerHTML = fluctuationAverages.samples;
 	document.getElementById(elementName).getElementsByClassName('lowerings')[0].innerHTML = fluctuationAverages.entropyLowerings;
@@ -55,5 +94,13 @@ socket.on("calculationResult", function(result) {
 		height: 350,
 		target: "#histogram-" + result.velocity.toString().replace(".","\\."),
 		chart_type: "histogram"
+	});
+	MG.data_graphic({
+		data: workAtPosition.getGraphingArray(),
+		width: 650,
+		height: 350,
+		target: "#energy-graph-" + result.velocity.toString().replace(".","\\."),
+		x_accessor: 'position',
+		y_accessor: 'estimateFreeEnergy'
 	});
 });
