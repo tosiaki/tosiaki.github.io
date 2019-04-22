@@ -21,7 +21,7 @@ socket.on("calculationResult", function(result) {
 			width: 650,
 			height: 150,
 			target: "#box-"+result.velocity+".histogram",
-			x_accessor: 'entropy
+			x_accessor: 'entropy'
 		});
 		document.body.appendChild(noticeBox);
 		noticeBox.appendChild(notice);
