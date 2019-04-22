@@ -9,7 +9,7 @@ socket.on("calculationResult", function(result) {
 		noticeBox.setAttribute("id", "box-"+result.velocity);
 		var notice = document.createTextNode('For the velocity of ' + result.velocity + ', the average e^(-Delta S) is currently equal to ');
 		var velocityHolder = document.createElement('div');
-		velocityHolder.setAttribute("class", "velocity");
+		velocityHolder.setAttribute("class", "integration-fluctionation-velocity");
 		var notice2 = document.createTextNode(' and currently has ');
 		var samplesHolder = document.createElement('div');
 		samplesHolder.setAttribute("class", "samples");
@@ -25,7 +25,8 @@ socket.on("calculationResult", function(result) {
 	fluctuationAverages = integralFluctuationAverages[result.velocity];
 	fluctuationAverages.sum += Math.exp(-result.entropy);
 	fluctuationAverages.samples++;
-	console.log("Velocity: " + result.velocity + ", Average: " + fluctuationAverages.sum/fluctuationAverages.samples);
-	document.getElementById("box-" + result.velocity).getElementsByClassName('velocity')[0].innerHTML = result.velocity;
-	document.getElementById("box-" + result.velocity).getElementsByClassName('samples')[0].innerHTML = result.samples;
+	average = fluctuationAverages.sum/fluctuationAverages.samples;
+	console.log("Velocity: " + result.velocity + ", Average: " + average); 
+	document.getElementById("box-" + result.velocity).getElementsByClassName('integration-fluctionation-average')[0].innerHTML = average;
+	document.getElementById("box-" + result.velocity).getElementsByClassName('samples')[0].innerHTML = fluctuationAverages.samples;
 });
