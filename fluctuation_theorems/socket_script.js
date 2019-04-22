@@ -16,13 +16,7 @@ socket.on("calculationResult", function(result) {
 		var notice3 = document.createTextNode(' samples.');
 		var chart = document.createElement('div');
 		chart.setAttribute("class", "histogram");
-		MG.data_graphic({
-			data: [],
-			width: 650,
-			height: 150,
-			target: "#box-"+result.velocity+".histogram",
-			chart_type: "histogram"
-		});
+
 		document.body.appendChild(noticeBox);
 		noticeBox.appendChild(notice);
 		noticeBox.appendChild(velocityHolder);
@@ -44,5 +38,9 @@ socket.on("calculationResult", function(result) {
 	document.getElementById(elementName).getElementsByClassName('samples')[0].innerHTML = fluctuationAverages.samples;
 	MG.data_graphic({
 		data: fluctuationAverages.entropies,
+		width: 650,
+		height: 150,
+		target: "#box-"+result.velocity+".histogram",
+		chart_type: "histogram"
 	});
 });
