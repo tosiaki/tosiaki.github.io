@@ -69,8 +69,6 @@ define([
 			// Coords
 			this.x = object.x;
 			this.y = object.y;
-			this.lastX = object.x;
-			this.lastY = object.x;
 
 			// Velocity
 			this.velX = object.velX;
@@ -149,7 +147,7 @@ define([
 					path: 			path
 				});
 
-				if(false && spacetime.length < 500) {
+				if(spacetime.length < 500) {
 					distance = bnRoot.CoM[0]*Math.random()/10;
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
@@ -169,7 +167,7 @@ define([
 					addObject(newObject2);
 				}
 
-				if(false && spacetime.length < Math.sqrt(bnRoot.CoM[0])*10 && spacetime.length < 500) {
+				if(spacetime.length < Math.sqrt(bnRoot.CoM[0])*10 && spacetime.length < 500) {
 					distance = bnRoot.CoM[0]*Math.random()/10;
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
@@ -549,12 +547,9 @@ define([
 				
 				// object.velX += object.deltaVelX * calculationSpeed;
 				// object.velY += object.deltaVelY * calculationSpeed;
-
-				// object.x += object.velX;
-				// object.y += object.velY;
 				
-				// object.velX += object.accX * calculationSpeed;
-				// object.velY += object.accY * calculationSpeed;
+				object.velX += object.accX * calculationSpeed;
+				object.velY += object.accY * calculationSpeed;
 
 				/*
 
@@ -577,14 +572,8 @@ define([
 
 				*/
 
-				currentX = object.x;
-				currentY = object.y;
-
-				object.x += object.x - object.lastX + object.accX * calculationSpeed * calculationSpeed;
-				object.y += object.y - object.lastY + object.accY * calculationSpeed * calculationSpeed;
-
-				object.lastX = currentX;
-				object.lastY = currentY;
+				object.x += object.velX * calculationSpeed;
+				object.y += object.velY * calculationSpeed;
 
 				// Reset object delta velocity
 				// object.deltaVelX = 0;
