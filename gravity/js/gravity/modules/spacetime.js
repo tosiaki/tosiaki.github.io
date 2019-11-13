@@ -547,6 +547,9 @@ define([
 				
 				// object.velX += object.deltaVelX * calculationSpeed;
 				// object.velY += object.deltaVelY * calculationSpeed;
+
+				object.x += object.velX;
+				object.y += object.velY;
 				
 				object.velX += object.accX * calculationSpeed;
 				object.velY += object.accY * calculationSpeed;
@@ -572,8 +575,8 @@ define([
 
 				*/
 
-				object.x += object.velX * calculationSpeed;
-				object.y += object.velY * calculationSpeed;
+				object.x += object.accX * calculationSpeed * calculationSpeed;
+				object.y += object.accY * calculationSpeed * calculationSpeed;
 
 				// Reset object delta velocity
 				// object.deltaVelX = 0;
