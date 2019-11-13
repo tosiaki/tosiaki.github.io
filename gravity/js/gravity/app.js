@@ -37,8 +37,6 @@ define([
 				cameraFocus: true,
 				x: 200,
 				y: 200,
-				lastX: 200,
-				lastY: 200,
 				velX: 0,
 				velY: 0,
 				accX: 0,
@@ -52,8 +50,6 @@ define([
 			var mercury = spacetime.addObject({
 				x: 230,
 				y: 200,
-				lastX: 230,
-				lastY: 200,
 				velX: 0,
 				velY: Math.sqrt(500/30),
 				accX: 0,
@@ -67,8 +63,6 @@ define([
 			var mars = spacetime.addObject({
 				x: 0,
 				y: 200,
-				lastX: 0,
-				lastY: 200,
 				velX: 0,
 				velY: -Math.sqrt(500/200),
 				accX: 0,

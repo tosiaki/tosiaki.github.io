@@ -69,6 +69,8 @@ define([
 			// Coords
 			this.x = object.x;
 			this.y = object.y;
+			this.lastX = object.x;
+			this.lastY = object.x;
 
 			// Velocity
 			this.velX = object.velX;
@@ -94,8 +96,6 @@ define([
 		}
 
 		function addObject(object){
-			object.lastX = object.lastX || object.x;
-			object.lastY = object.lastY || object.y;
 			var newObject = new objectConstructor(object);
 
 			spacetime.push(newObject);
@@ -140,8 +140,6 @@ define([
 					cameraFocus: 	cameraFocus,
 					x: 				x,
 					y: 				y,
-					lastX: 			x,
-					lastY: 			y,
 					velX: 			velX,
 					velY: 			velY,
 					accX: 0,
@@ -160,8 +158,6 @@ define([
 						cameraFocus: 	false,
 						x: 				distance*Math.cos(angle) + bnRoot.CoM[1], // -x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
 						y: 				distance*Math.sin(angle) + bnRoot.CoM[2], // -y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
-						lastX: 			distance*Math.cos(angle) + bnRoot.CoM[1], // -x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
-						lastY: 			distance*Math.sin(angle) + bnRoot.CoM[2], // -y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
 						velX: 			speed*Math.cos(direction), //Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						velY: 			speed*Math.sin(direction), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
@@ -182,8 +178,6 @@ define([
 						cameraFocus: 	false,
 						x: 				distance*Math.cos(angle) + bnRoot.CoM[1], // -x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
 						y: 				distance*Math.sin(angle) + bnRoot.CoM[2], // -y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
-						lastX: 			distance*Math.cos(angle) + bnRoot.CoM[1], // -x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
-						lastY: 			distance*Math.sin(angle) + bnRoot.CoM[2], // -y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
 						velX: 			speed*Math.cos(direction), //Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						velY: 			speed*Math.sin(direction), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
@@ -201,8 +195,6 @@ define([
 						cameraFocus: 	false,
 						x: 				distance*Math.cos(angle) + bnRoot.CoM[1], // -x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
 						y: 				distance*Math.sin(angle) + bnRoot.CoM[2], // -y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
-						lastX: 			distance*Math.cos(angle) + bnRoot.CoM[1], // -x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
-						lastY: 			distance*Math.sin(angle) + bnRoot.CoM[2], // -y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
 						velX: 			speed*Math.cos(direction), //Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						velY: 			speed*Math.sin(direction), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
@@ -220,8 +212,6 @@ define([
 						cameraFocus: 	false,
 						x: 				distance*Math.cos(angle) + bnRoot.CoM[1], // -x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
 						y: 				distance*Math.sin(angle) + bnRoot.CoM[2], // -y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
-						lastX: 			distance*Math.cos(angle) + bnRoot.CoM[1], // -x+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
-						lastY: 			distance*Math.sin(angle) + bnRoot.CoM[2], // -y+(Math.random()-0.5)*Math.min(mass*5,2000*Math.sqrt(spacetime.length)),
 						velX: 			speed*Math.cos(direction), //Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						velY: 			speed*Math.sin(direction), //+Math.sqrt(mass)*(Math.random()-0.5)*2.4,
 						accX: 0,
