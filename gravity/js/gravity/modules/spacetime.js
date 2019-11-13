@@ -147,7 +147,7 @@ define([
 					path: 			path
 				});
 
-				if(spacetime.length < 500) {
+				if(false && spacetime.length < 500) {
 					distance = bnRoot.CoM[0]*Math.random()/10;
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
@@ -167,7 +167,7 @@ define([
 					addObject(newObject2);
 				}
 
-				if(spacetime.length < Math.sqrt(bnRoot.CoM[0])*10 && spacetime.length < 500) {
+				if(false && spacetime.length < Math.sqrt(bnRoot.CoM[0])*10 && spacetime.length < 500) {
 					distance = bnRoot.CoM[0]*Math.random()/10;
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
