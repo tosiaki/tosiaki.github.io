@@ -580,8 +580,8 @@ define([
 				object.lastX = object.lastX || object.x
 				object.lastY = object.lastY || object.y
 
-				object.x += object.x - object.lastX + object.accX;// * calculationSpeed * calculationSpeed;
-				object.y += object.y - object.lastY + object.accY;// * calculationSpeed * calculationSpeed;
+				object.x += object.x - object.lastX + object.accX * calculationSpeed * calculationSpeed;
+				object.y += object.y - object.lastY + object.accY * calculationSpeed * calculationSpeed;
 
 				object.lastX = currentX;
 				object.lastY = currentY;
