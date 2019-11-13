@@ -104,7 +104,7 @@ define([
 		// Takes in two objects, joins them if they're within eachothers radius
 		function joinObjects(objectA, objectB){
 			if (
-				getObjectDistance(objectA, objectB) < getObjectRadius(objectA) + getObjectRadius(objectB) /* &&
+				getObjectDistance(objectA, objectB)*10 < getObjectRadius(objectA) + getObjectRadius(objectB) /* &&
 				(objectA.velX-objectB.velX)*(objectA.velX-objectB.velX)+(objectA.velY-objectB.velY)*(objectA.velY-objectB.velY) < objectA.mass*objectB.mass/5 */
 			){
 				// Splice the objects from spacetime
