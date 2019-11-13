@@ -124,6 +124,9 @@ define([
 				var x = objectA.x*objectA.mass/mass + objectB.x*objectB.mass/mass;
 				var y = objectA.y*objectA.mass/mass + objectB.y*objectB.mass/mass;
 
+				objectA.velX = (objectA.x - objectA.lastX)/calculationSpeed;
+				objectB.velX = (objectB.x - objectB.lastX)/calculationSpeed;
+
 				// Velocity
 				var velX = objectA.velX*objectA.mass/mass + objectB.velX*objectB.mass/mass;
 				var velY = objectA.velY*objectA.mass/mass + objectB.velY*objectB.mass/mass;
