@@ -69,8 +69,8 @@ define([
 			// Coords
 			this.x = object.x;
 			this.y = object.y;
-			this.lastX = object.x - object.velX;
-			this.lastY = object.y - object.velY;
+			this.lastX = object.x - object.velX * calculationSpeed;
+			this.lastY = object.y - object.velY * calculationSpeed;
 
 			// Velocity
 			this.velX = object.velX;
