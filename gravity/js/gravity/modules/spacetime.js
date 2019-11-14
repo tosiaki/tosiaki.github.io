@@ -589,6 +589,9 @@ define([
 				object.lastX = currentX;
 				object.lastY = currentY;
 
+				object.velX = object.x - object.lastX;
+				object.velY = object.y - object.lastY;
+
 				// Reset object delta velocity
 				// object.deltaVelX = 0;
 				// object.deltaVelY = 0;
