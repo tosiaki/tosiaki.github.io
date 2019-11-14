@@ -152,7 +152,7 @@ define([
 					path: 			path
 				});
 
-				if(spacetime.length < 2500) {
+				if(spacetime.length < 0) {
 					distance = bnRoot.CoM[0]*Math.random();
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
@@ -172,7 +172,7 @@ define([
 					addObject(newObject2);
 				}
 
-				if(spacetime.length < Math.sqrt(bnRoot.CoM[0])*10 && spacetime.length < 2500) {
+				if(spacetime.length < Math.sqrt(bnRoot.CoM[0])*10 && spacetime.length < 0) {
 					distance = bnRoot.CoM[0]*Math.random();
 					angle = 2*Math.PI*Math.random();
 					speed = Math.sqrt(Math.sqrt(bnRoot.CoM[0])/Math.sqrt(distance));
@@ -580,9 +580,6 @@ define([
 				currentX = object.x;
 				currentY = object.y;
 
-				object.lastX = object.lastX || object.x
-				object.lastY = object.lastY || object.y
-
 				object.x += object.x - object.lastX + object.accX * calculationSpeed * calculationSpeed;
 				object.y += object.y - object.lastY + object.accY * calculationSpeed * calculationSpeed;
 
@@ -601,7 +598,7 @@ define([
 
 			for (var i = 0; i < spacetime.length; i++) {
 				var object = spacetime[i];
-				if ((object.x-bnRoot.CoM[1])*(object.x-bnRoot.CoM[1]) + (object.y-bnRoot.CoM[2])*(object.y-bnRoot.CoM[2]) > bnRoot.CoM[0]*bnRoot.CoM[0]*8 ) {
+				if ((object.x-bnRoot.CoM[1])*(object.x-bnRoot.CoM[1]) + (object.y-bnRoot.CoM[2])*(object.y-bnRoot.CoM[2]) > bnRoot.CoM[0]*bnRoot.CoM[0]*1000 ) {
 					spacetime = _.without(spacetime, object);
 				}
 			}
