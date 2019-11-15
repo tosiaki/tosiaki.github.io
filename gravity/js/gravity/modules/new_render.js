@@ -167,7 +167,6 @@ define(['jquery', 'underscore'], function($, _){
 			} else {
 				ctx.fillStyle = "#900";
 			}
-			ctx.fillStyle = "#000";
 			if (object.cameraFocus === true) ctx.fillStyle = '#40A2BF';
 			ctx.fill();
 		})();
