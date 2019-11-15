@@ -71,7 +71,7 @@ define([
 			this.y = object.y;
 			this.lastX = object.x - object.velX * calculationSpeed;
 			this.lastY = object.y - object.velY * calculationSpeed;
-			this.charge = Math.random() - 0.5;
+			this.charge = this.charge || Math.random() - 0.5;
 
 			// Velocity
 			this.velX = object.velX;
@@ -105,7 +105,7 @@ define([
 		// Takes in two objects, joins them if they're within eachothers radius
 		function joinObjects(objectA, objectB){
 			if (
-				getObjectDistance(objectA, objectB)*10 < getObjectRadius(objectA) + getObjectRadius(objectB) /* &&
+				getObjectDistance(objectA, objectB)*5 < getObjectRadius(objectA) + getObjectRadius(objectB) /* &&
 				(objectA.velX-objectB.velX)*(objectA.velX-objectB.velX)+(objectA.velY-objectB.velY)*(objectA.velY-objectB.velY) < objectA.mass*objectB.mass/5 */
 			){
 				// Splice the objects from spacetime
