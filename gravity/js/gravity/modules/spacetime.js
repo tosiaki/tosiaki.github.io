@@ -71,6 +71,7 @@ define([
 			this.y = object.y;
 			this.lastX = object.x - object.velX * calculationSpeed;
 			this.lastY = object.y - object.velY * calculationSpeed;
+			this.charge = Math.random() - 0.5;
 
 			// Velocity
 			this.velX = object.velX;
@@ -104,7 +105,7 @@ define([
 		// Takes in two objects, joins them if they're within eachothers radius
 		function joinObjects(objectA, objectB){
 			if (
-				getObjectDistance(objectA, objectB)*200 < getObjectRadius(objectA) + getObjectRadius(objectB) /* &&
+				getObjectDistance(objectA, objectB)*20 < getObjectRadius(objectA) + getObjectRadius(objectB) /* &&
 				(objectA.velX-objectB.velX)*(objectA.velX-objectB.velX)+(objectA.velY-objectB.velY)*(objectA.velY-objectB.velY) < objectA.mass*objectB.mass/5 */
 			){
 				// Splice the objects from spacetime
@@ -240,6 +241,7 @@ define([
 		var BN_THETA = 0.5;
 		var DISTANCE_MULTIPLE = 1;
 		var G = 1; // Gravitational Constant
+		var Electric = 1; // Electric constant
 		var ETA = 0; // Softening constant
 		var GFACTOR = 2; // Higher means distance has more effect (3 is reality)
 
@@ -268,6 +270,8 @@ define([
 			bnRoot = {b: [], // Body
 				leaf:true,
 				CoM: null, // center of mass
+				CoP: null, // center of positive charge
+				CoN: null, // center of negative charge
 				nodes:[null,null,null,null],
 				// x y x2 y2
 				box:[minPosX,minPosY,maxPosX,maxPosY]};
@@ -322,9 +326,31 @@ define([
 				node.CoM[1] = (node.CoM[1]*node.CoM[0] + spacetime[i].x*spacetime[i].mass)/(node.CoM[0]+spacetime[i].mass);
 				node.CoM[2] = (node.CoM[2]*node.CoM[0] + spacetime[i].y*spacetime[i].mass)/(node.CoM[0]+spacetime[i].mass);
 				node.CoM[0] += spacetime[i].mass;
+
+				if (spacetime[i].charge > 0) {
+					node.CoP[1] = (node.CoP[1]*node.CoP[0] + spacetime[i].x*spacetime[i].charge)/(node.CoP[0]+spacetime[i].charge);
+					node.CoP[2] = (node.CoP[2]*node.CoP[0] + spacetime[i].y*spacetime[i].charge)/(node.CoP[0]+spacetime[i].charge);
+					node.CoP[0] += spacetime[i].charge;
+				}
+
+				if (spacetime[i].charge < 0) {
+					node.CoN[1] = (node.CoN[1]*node.CoN[0] + spacetime[i].x*spacetime[i].charge)/(node.CoN[0]+spacetime[i].charge);
+					node.CoN[2] = (node.CoN[2]*node.CoN[0] + spacetime[i].y*spacetime[i].charge)/(node.CoN[0]+spacetime[i].charge);
+					node.CoN[0] += spacetime[i].charge;
+				}
 			} else { // else if node empty, add body
 				node.b = [i];
 				node.CoM = [spacetime[i].mass, spacetime[i].x,spacetime[i].y]; // Center of Mass set to the position of single body
+				if (spacetime[i].charge > 0) {
+					node.CoP = [spacetime[i].charge, spacetime[i].x, spacetime[i].y];
+				} else {
+					node.CoP = [0, spacetime[i].x, spacetime[i].y]
+				}
+				if (spacetime[i].charge < 0) {
+					node.CoN = [spacetime[i].charge, spacetime[i].x, spacetime[i].y];
+				} else {
+					node.CoN = [0, spacetime[i].x, spacetime[i].y]
+				}
 			}
 		}
 		function getQuad(i,box) {
@@ -394,7 +420,7 @@ define([
 				var d = getDist(spacetime[bI].x,spacetime[bI].y,
 					node.CoM[1],node.CoM[2]);
 				if (s/d < BN_THETA) {
-					setAccelDirect(bI,node.CoM[0],node.CoM[1],node.CoM[2])
+					setAccelDirect(bI,node.CoM[0],node.CoM[1],node.CoM[2],node.CoP[0],node.CoP[1],node.CoP[2],node.CoN[0],node.CoN[1],node.CoN[2])
 					numChecks += 1;
 				}
 				else {
@@ -436,15 +462,15 @@ define([
 				spacetime[j].accY -= F[1]/spacetime[j].mass;
 			}
 		}
-		function setAccelDirect(i,m,x,y) {
+		function setAccelDirect(i,m,x,y,p,px,py,n,nx,ny) {
 			// Set's accel according to given mass
 
 			// get Force Vector between body i
 			// and a virtual mass
 			//   with mass m, at position cx,cy
 			var F = getForceVecDirect(
-				spacetime[i].mass,spacetime[i].x,spacetime[i].y,
-				m,x,y);
+				spacetime[i].mass,spacetime[i].charge,spacetime[i].x,spacetime[i].y,
+				m,x,y,p,px,py,n,nx,ny);
 			
 			// Update acceleration of body
 			spacetime[i].accX += F[0]/spacetime[i].mass;
@@ -456,16 +482,20 @@ define([
 				dx = spacetime[j].x - spacetime[i].x;
 				dy = spacetime[j].y - spacetime[i].y;
 				F = G*spacetime[i].mass*spacetime[j].mass/Math.pow(getObjectRadius(spacetime[i]) + getObjectRadius(spacetime[j]),GFACTOR);
+				F -= Electric*spacetime[i].charge*spacetime[j].charge/Math.pow(getObjectRadius(spacetime[i]) + getObjectRadius(spacetime[j]),GFACTOR);
 				return [ F*dx , F*dy ];
 			}
 			else {
 				return getForceVecDirect(
-				spacetime[i].mass,spacetime[i].x,spacetime[i].y,
-				spacetime[j].mass,spacetime[j].x,spacetime[j].y);
+					spacetime[i].mass,spacetime[i].charge,spacetime[i].x,spacetime[i].y,
+					spacetime[j].mass,spacetime[j].x,spacetime[j].y,
+					Math.max(spacetime[j].charge,0),spacetime[j].x,spacetime[j].y,
+					Math.min(spacetime[j].charge,0),spacetime[j].x,spacetime[j].y
+				);
 			}
 		}
 
-		function getForceVecDirect(m,x,y,m2,x2,y2) {
+		function getForceVecDirect(m,c,x,y,m2,x2,y2,p,px,py,n,nx,ny) {
 			// Determines force interaction between
 			// bods[i] and bods[j], an adds to bods[i]
 			var dx = x2-x;
@@ -473,6 +503,12 @@ define([
 			var r = (getDist(x,y,x2,y2)+ETA) * DISTANCE_MULTIPLE;
 			// F_{x|y} = d_{x|y}/r * G*M*m/r.^3;
 			var F = G*m*m2/Math.pow(r,GFACTOR);
+
+			var rp = (getDist(x,y,px,py)+ETA) * DISTANCE_MULTIPLE;
+			F -= Electric*c*p/Math.pow(rp,GFACTOR);
+
+			var np = (getDist(x,y,nx,ny)+ETA) * DISTANCE_MULTIPLE;
+			F -= Electric*c*n/Math.pow(np,GFACTOR);
 
 			return [ F*dx/r , F*dy/r ];
 		}
