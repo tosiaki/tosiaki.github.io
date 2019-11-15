@@ -341,7 +341,7 @@ define([
 			} else { // else if node empty, add body
 				node.b = [i];
 				node.CoM = [spacetime[i].mass, spacetime[i].x,spacetime[i].y]; // Center of Mass set to the position of single body
-				if (spacetime[i].charge > 0) {
+				if (spacetime[i].charge >= 0) {
 					node.CoP = [spacetime[i].charge, spacetime[i].x, spacetime[i].y];
 				} else {
 					node.CoP = [0, spacetime[i].x, spacetime[i].y]
