@@ -105,7 +105,7 @@ define([
 		// Takes in two objects, joins them if they're within eachothers radius
 		function joinObjects(objectA, objectB){
 			if (
-				getObjectDistance(objectA, objectB)*20 < getObjectRadius(objectA) + getObjectRadius(objectB) /* &&
+				getObjectDistance(objectA, objectB)*10 < getObjectRadius(objectA) + getObjectRadius(objectB) /* &&
 				(objectA.velX-objectB.velX)*(objectA.velX-objectB.velX)+(objectA.velY-objectB.velY)*(objectA.velY-objectB.velY) < objectA.mass*objectB.mass/5 */
 			){
 				// Splice the objects from spacetime
@@ -120,6 +120,7 @@ define([
 
 				// New mass
 				var mass = objectA.mass + objectB.mass;
+				var charge = objectA.charge + objectB.charge;
 
 				// Coords
 				var x = objectA.x*objectA.mass/mass + objectB.x*objectB.mass/mass;
@@ -149,6 +150,7 @@ define([
 					accX: 0,
 					accY: 0,
 					mass: 			mass,
+					charge: charge,
 					density: 		density,
 					path: 			path
 				});
@@ -167,6 +169,7 @@ define([
 						accX: 0,
 						accY: 0,
 						mass: 			Math.random(), 
+						charge: charge,
 						density: 		density,
 						path: 			[]
 					});
@@ -187,6 +190,7 @@ define([
 						accX: 0,
 						accY: 0,
 						mass: 			Math.random(), 
+						charge: charge,
 						density: 		density,
 						path: 			[]
 					});
@@ -204,6 +208,7 @@ define([
 						accX: 0,
 						accY: 0,
 						mass: 			Math.random(), 
+						charge: charge,
 						density: 		density,
 						path: 			[]
 					});
@@ -221,6 +226,7 @@ define([
 						accX: 0,
 						accY: 0,
 						mass: 			Math.random(), 
+						charge: charge,
 						density: 		density,
 						path: 			[]
 					});
