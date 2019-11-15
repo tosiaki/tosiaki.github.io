@@ -162,6 +162,11 @@ define(['jquery', 'underscore'], function($, _){
 			);
 			
 			ctx.strokeStyle = "#666";
+			if (object.charge >= 0) {
+				ctx.fillStyle = "#090";
+			} else {
+				ctx.fillStyle = "#900";
+			}
 			ctx.fillStyle = "#000";
 			if (object.cameraFocus === true) ctx.fillStyle = '#40A2BF';
 			ctx.fill();
