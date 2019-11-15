@@ -515,8 +515,8 @@ define([
 			var rp = (getDist(x,y,px,py)+ETA) * DISTANCE_MULTIPLE;
 			var Fp = Electric*c*p/Math.pow(rp,GFACTOR);
 
-			var np = (getDist(x,y,nx,ny)+ETA) * DISTANCE_MULTIPLE;
-			var Fn = Electric*c*n/Math.pow(np,GFACTOR);
+			var rn = (getDist(x,y,nx,ny)+ETA) * DISTANCE_MULTIPLE;
+			var Fn = Electric*c*n/Math.pow(rn,GFACTOR);
 
 			return [ F*dx/r + Fp*(px-x)/rp + Fp*(px-x)/rn, F*dy/r + Fp*(py-y)/rp + Fn*(nx-x)/rn];
 		}
