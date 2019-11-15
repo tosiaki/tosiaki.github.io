@@ -369,6 +369,8 @@ define([
 			var child = {b:[child],
 				leaf:true,
 				CoM : [spacetime[child].mass, spacetime[child].x,spacetime[child].y], // Center of Mass set to the position of single body
+				CoP : [Math.max(spacetime[child].charge,0),spacetime[child].x,spacetime[child].y],
+				CoN : [Math.min(spacetime[child].charge,0),spacetime[child].x,spacetime[child].y],
 				nodes:[null,null,null,null],
 				box:[0,0,0,0]};
 
