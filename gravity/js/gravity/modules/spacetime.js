@@ -247,7 +247,7 @@ define([
 		var BN_THETA = 0.5;
 		var DISTANCE_MULTIPLE = 1;
 		var G = 1; // Gravitational Constant
-		var Electric = 1; // Electric constant
+		var Electric = 20; // Electric constant
 		var ETA = 0; // Softening constant
 		var GFACTOR = 2; // Higher means distance has more effect (3 is reality)
 
