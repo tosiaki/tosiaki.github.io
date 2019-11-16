@@ -492,8 +492,8 @@ define([
 				distanceFactor = getObjectDistance(spacetime[i], spacetime[j])/Math.pow(getObjectRadius(spacetime[i]) + getObjectRadius(spacetime[j]),GFACTOR);
 				dx = spacetime[j].x - spacetime[i].x;
 				dy = spacetime[j].y - spacetime[i].y;
-				F = (G*spacetime[i].mass*spacetime[j].mass - Electric*spacetime[i].charge*spacetime[j].charge)*currentDistance/(totalDistance*totalDistance*totalDistance*totalDistance)-spacetime[j].mass*Math.sqrt(spacetime[i].velX*spacetime[i].velX+spacetime[i].velY*spacetime[i].velY);
-				return [ F*dx , F*dy ];
+				F = (G*spacetime[i].mass*spacetime[j].mass - Electric*spacetime[i].charge*spacetime[j].charge)*currentDistance/(totalDistance*totalDistance*totalDistance*totalDistance);
+				return [ F*dx - spacetime[i].velX*spacetime[j].mass , F*dy - spacetime[i].velY*spacetime[j].mass ];
 			}
 			else {
 				return getForceVecDirect(
