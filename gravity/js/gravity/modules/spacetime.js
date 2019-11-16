@@ -486,11 +486,13 @@ define([
 		}
 		
 		function getForceVec(i,j) {
-			if (getObjectDistance(spacetime[i], spacetime[j]) < getObjectRadius(spacetime[i]) + getObjectRadius(spacetime[j])) {
+			totalDistance = getObjectRadius(spacetime[i]) + getObjectRadius(spacetime[j]);
+			currentDistance = getObjectDistance(spacetime[i], spacetime[j]);
+			if ( currentDistance < totalDistance) {
 				distanceFactor = getObjectDistance(spacetime[i], spacetime[j])/Math.pow(getObjectRadius(spacetime[i]) + getObjectRadius(spacetime[j]),GFACTOR);
 				dx = spacetime[j].x - spacetime[i].x;
 				dy = spacetime[j].y - spacetime[i].y;
-				F = (G*spacetime[i].mass*spacetime[j].mass - Electric*spacetime[i].charge*spacetime[j].charge)*distanceFactor;
+				F = (G*spacetime[i].mass*spacetime[j].mass - Electric*spacetime[i].charge*spacetime[j].charge)*currentDistance/totalDistance;
 				return [ F*dx , F*dy ];
 			}
 			else {
@@ -518,7 +520,7 @@ define([
 			var rn = (getDist(x,y,nx,ny)+ETA) * DISTANCE_MULTIPLE;
 			var Fn = -Electric*c*n/Math.pow(rn,GFACTOR);
 
-			return [ F*dx/r + Fp*(px-x)/rp + Fp*(px-x)/rn, F*dy/r + Fp*(py-y)/rp + Fn*(nx-x)/rn];
+			return [ F*dx/r + Fp*(px-x)/rp + Fn*(nx-x)/rn, F*dy/r + Fp*(py-y)/rp + Fn*(nx-x)/rn];
 		}
 		
 		var numChecks;
