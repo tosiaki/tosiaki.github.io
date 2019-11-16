@@ -492,7 +492,7 @@ define([
 				distanceFactor = getObjectDistance(spacetime[i], spacetime[j])/Math.pow(getObjectRadius(spacetime[i]) + getObjectRadius(spacetime[j]),GFACTOR);
 				dx = spacetime[j].x - spacetime[i].x;
 				dy = spacetime[j].y - spacetime[i].y;
-				F = (G*spacetime[i].mass*spacetime[j].mass - Electric*spacetime[i].charge*spacetime[j].charge)*currentDistance/(totalDistance*totalDistance*totalDistance);
+				F = (G*spacetime[i].mass*spacetime[j].mass - Electric*spacetime[i].charge*spacetime[j].charge)*currentDistance/(totalDistance*totalDistance*totalDistance*totalDistance);
 				return [ F*dx , F*dy ];
 			}
 			else {
