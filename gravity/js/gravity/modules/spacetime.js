@@ -493,7 +493,7 @@ define([
 				dx = spacetime[j].x - spacetime[i].x;
 				dy = spacetime[j].y - spacetime[i].y;
 				F = (G*spacetime[i].mass*spacetime[j].mass - Electric*spacetime[i].charge*spacetime[j].charge)*currentDistance/(totalDistance*totalDistance*totalDistance*totalDistance);
-				return [ F*dx - spacetime[i].velX*spacetime[j].mass , F*dy - spacetime[i].velY*spacetime[j].mass ];
+				return [ F*dx - (spacetime[i].velX-spacetime[j].velX)*spacetime[j].mass , F*dy - (spacetime[i].velY-spacetime[j].velY)*spacetime[j].mass ];
 			}
 			else {
 				return getForceVecDirect(
