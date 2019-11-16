@@ -520,7 +520,7 @@ define([
 			var rn = (getDist(x,y,nx,ny)+ETA) * DISTANCE_MULTIPLE;
 			var Fn = -Electric*c*n/Math.pow(rn,GFACTOR);
 
-			return [ F*dx/r + Fp*(px-x)/rp + Fn*(nx-x)/rn, F*dy/r + Fp*(py-y)/rp + Fn*(nx-x)/rn];
+			return [ F*dx/r + Fp*(px-x)/rp + Fn*(nx-x)/rn, F*dy/r + Fp*(py-y)/rp + Fn*(ny-y)/rn];
 		}
 		
 		var numChecks;
