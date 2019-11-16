@@ -487,7 +487,7 @@ define([
 		
 		function getAccelVec(i,j) {
 			totalDistance = getObjectRadius(spacetime[i]) + getObjectRadius(spacetime[j]);
-			currentDistanceSquared = getObjectDistanceSquared(spacetime[i], spacetime[j]);
+			currentDistanceSquared = getDistSquared(spacetime[i], spacetime[j]);
 			if ( currentDistanceSquared < totalDistance*totalDistance) {
 				dx = spacetime[j].x - spacetime[i].x;
 				dy = spacetime[j].y - spacetime[i].y;
