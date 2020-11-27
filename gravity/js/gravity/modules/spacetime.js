@@ -811,7 +811,7 @@ define([
 				// ----------------------------------------
 
 				// Calculate gravitational forces between all objects
-				// calculateObjectForce();
+				calculateObjectForce();
 				bnBuildTree();
 				forceBNtree();
 
