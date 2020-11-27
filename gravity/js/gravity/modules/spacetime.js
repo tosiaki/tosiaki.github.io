@@ -748,63 +748,63 @@ define([
 				// -----------------------------------------
 				// | Find clustering objects and join them |
 				// -----------------------------------------
-				function recursivelyJoinClusteringObjects(){
-					maxPosX = spacetime[0].x;
-					minPosX = spacetime[0].x;
-					maxPosY = spacetime[0].y;
-					minPosY = spacetime[0].y;
-					var maxDiameter = 0.1;
-					var grid = [];
+				// function recursivelyJoinClusteringObjects(){
+				// 	maxPosX = spacetime[0].x;
+				// 	minPosX = spacetime[0].x;
+				// 	maxPosY = spacetime[0].y;
+				// 	minPosY = spacetime[0].y;
+				// 	var maxDiameter = 0.1;
+				// 	var grid = [];
 
-					for (var i=0; i<spacetime.length; i++) {
-						maxPosX = Math.max(maxPosX, spacetime[i].x);
-						minPosX = Math.min(minPosX, spacetime[i].x);
-						maxPosY = Math.max(maxPosY, spacetime[i].y);
-						minPosY = Math.min(minPosY, spacetime[i].y);
-						maxDiameter = Math.max(maxDiameter, 2*getObjectRadius(spacetime[i]))
-					}
+				// 	for (var i=0; i<spacetime.length; i++) {
+				// 		maxPosX = Math.max(maxPosX, spacetime[i].x);
+				// 		minPosX = Math.min(minPosX, spacetime[i].x);
+				// 		maxPosY = Math.max(maxPosY, spacetime[i].y);
+				// 		minPosY = Math.min(minPosY, spacetime[i].y);
+				// 		maxDiameter = Math.max(maxDiameter, 2*getObjectRadius(spacetime[i]))
+				// 	}
 
-					
+				// 	
 
-					for (var i=0; i<spacetime.length; i++) {
-						gridPosX = Math.floor(spacetime[i].x/maxDiameter);
-						gridPosY = Math.floor(spacetime[i].y/maxDiameter);
-						grid[gridPosX] = grid[gridPosX] || [];
-						grid[gridPosX][gridPosY] = grid[gridPosX][gridPosY] || [];
-						grid[gridPosX][gridPosY].push(i)
-					}
+				// 	for (var i=0; i<spacetime.length; i++) {
+				// 		gridPosX = Math.floor(spacetime[i].x/maxDiameter);
+				// 		gridPosY = Math.floor(spacetime[i].y/maxDiameter);
+				// 		grid[gridPosX] = grid[gridPosX] || [];
+				// 		grid[gridPosX][gridPosY] = grid[gridPosX][gridPosY] || [];
+				// 		grid[gridPosX][gridPosY].push(i)
+				// 	}
 
-					for (gridPosX in grid) {
-						for (gridPosY in grid[gridPosX]) {
-							gridPosX = parseInt(gridPosX, 10);
-							gridPosY = parseInt(gridPosY, 10);
-							for (var a = grid[gridPosX][gridPosY].length - 1; a >= 0; a--) {
-								var objectA = spacetime[grid[gridPosX][gridPosY][a]];
-								for (var relPosX = -1; relPosX <= 1; relPosX++) {
-									for (var relPosY = -1; relPosY <= 1; relPosY++) {
-										if (grid[gridPosX+relPosX] && grid[gridPosX+relPosX][gridPosY+relPosY]) {
-											for (var b = grid[gridPosX+relPosX][gridPosY+relPosY].length - 1; b >= 0; b--) {
-												if (relPosX != 0 || relPosY !=0 || a != b ) {
-													var objectB = spacetime[grid[gridPosX+relPosX][gridPosY+relPosY][b]];
+				// 	for (gridPosX in grid) {
+				// 		for (gridPosY in grid[gridPosX]) {
+				// 			gridPosX = parseInt(gridPosX, 10);
+				// 			gridPosY = parseInt(gridPosY, 10);
+				// 			for (var a = grid[gridPosX][gridPosY].length - 1; a >= 0; a--) {
+				// 				var objectA = spacetime[grid[gridPosX][gridPosY][a]];
+				// 				for (var relPosX = -1; relPosX <= 1; relPosX++) {
+				// 					for (var relPosY = -1; relPosY <= 1; relPosY++) {
+				// 						if (grid[gridPosX+relPosX] && grid[gridPosX+relPosX][gridPosY+relPosY]) {
+				// 							for (var b = grid[gridPosX+relPosX][gridPosY+relPosY].length - 1; b >= 0; b--) {
+				// 								if (relPosX != 0 || relPosY !=0 || a != b ) {
+				// 									var objectB = spacetime[grid[gridPosX+relPosX][gridPosY+relPosY][b]];
 
-													var joined = joinObjects(objectA, objectB);
+				// 									var joined = joinObjects(objectA, objectB);
 
-													if (joined === true) {
-														return recursivelyJoinClusteringObjects();
-													};
-												};
-											};
-										}
-									}
-								}
-							};
-						}
-					}
-					
+				// 									if (joined === true) {
+				// 										return recursivelyJoinClusteringObjects();
+				// 									};
+				// 								};
+				// 							};
+				// 						}
+				// 					}
+				// 				}
+				// 			};
+				// 		}
+				// 	}
+				// 	
 
-				}
+				// }
 
-				recursivelyJoinClusteringObjects();
+				// recursivelyJoinClusteringObjects();
 
 				// ----------------------------------------
 				// | Newtons law of universal gravitation |
