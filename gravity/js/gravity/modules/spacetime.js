@@ -804,7 +804,7 @@ define([
 
 				}
 
-				recursivelyJoinClusteringObjects();
+				// recursivelyJoinClusteringObjects();
 
 				// ----------------------------------------
 				// | Newtons law of universal gravitation |
