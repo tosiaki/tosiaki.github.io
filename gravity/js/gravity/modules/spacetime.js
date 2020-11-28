@@ -787,9 +787,9 @@ define([
 												if (relPosX != 0 || relPosY !=0 || a != b ) {
 													var objectB = spacetime[grid[gridPosX+relPosX][gridPosY+relPosY][b]];
 
-													// var joined = joinObjects(objectA, objectB);
+													var joined = joinObjects(objectA, objectB);
 
-													if (false) {
+													if (joined === true) {
 														return recursivelyJoinClusteringObjects();
 													};
 												};
