@@ -14,7 +14,7 @@ const config = {
     calculationSpeed: 1,     // Time step multiplier (dt = calculationSpeed / calculationsPerSec implicitly?) - careful tuning needed
     massMultiplier: 1,       // Visual exaggeration for radius calculation
     G: 1,                    // Gravitational Constant
-    BN_THETA: 0.5,           // Barnes-Hut opening angle parameter (accuracy vs speed)
+    BN_THETA: 0.9,           // Barnes-Hut opening angle parameter (accuracy vs speed)
     MAXDEPTH: 50,            // Max depth of the Barnes-Hut tree
     // ETA: 0,               // Softening constant (removed, wasn't used effectively)
     // GFACTOR: 2,           // (removed, wasn't used effectively)
@@ -35,6 +35,7 @@ class Particle {
         this.x = options.x;
         this.y = options.y;
         this.mass = options.mass;
+        this._cachedRadius = 0;
 
         // Velocity and Acceleration (using Verlet integration requires current & previous position)
         this.velX = options.velX || 0; // Store initial velocity for Verlet start
@@ -56,18 +57,26 @@ class Particle {
 
         // Internal state for simulation step
         this.markedForRemoval = false; // Flag for merging/removal
+
+        this.updateCachedRadius();
     }
 
-    // Calculate radius based on mass, density, and visual multiplier
-    getRadius() {
-        // Avoid issues with zero or negative mass if they occur
+    _calculateRadius() {
         if (this.mass <= 0 || this.density <= 0) return 0;
-        // V = mass / density = (4/3) * PI * r^3
-        // r^3 = (mass / density) / ((4/3) * PI)
-        // r = cbrt(3 * mass / (4 * PI * density)) - Incorporating massMultiplier for visual size
-        // Let's assume massMultiplier directly scales volume for simplicity as in original
-        const volume = this.mass * this.density * config.massMultiplier;
+        const volume = this.mass * this.density * config.massMultiplier; // Use module config
         return Math.cbrt(volume / (4 / 3 * Math.PI));
+    }
+
+    // Method to update the cache
+    updateCachedRadius() {
+        this._cachedRadius = this._calculateRadius();
+    }
+
+    // Public method to GET the radius (now reads from cache)
+    getRadius() {
+        // Optional: Recalculate if needed, but for now, rely on external updates
+        // if (this._cachedRadius === undefined) this.updateCachedRadius(); // Defensive
+        return this._cachedRadius;
     }
 
     // Calculate current velocity (primarily for info/debug, Verlet uses positions)
@@ -563,17 +572,29 @@ function removeEscapedParticles() {
 // --- Main Simulation Loop Function ---
 
 function simulationStep() {
-    // 1. Handle Collisions and Merges
-    handleCollisionsAndMerges(); // Updates spacetime array
+    console.time("step:updateRadii");
+    // Update cached radii for all particles IF mass/density could change outside merging
+    // If mass only changes via merging, this might be redundant, but safer for now.
+    for (const particle of spacetime) {
+        particle.updateCachedRadius(); // Recalculate based on current mass/density
+    }
+    console.timeEnd("step:updateRadii");
 
-    // 2. Build/Rebuild Barnes-Hut Tree (based on updated particle list)
+    console.time("step:merge");
+    handleCollisionsAndMerges(); // Uses particle.getRadius() -> cached value
+    console.timeEnd("step:merge");
+
+    console.time("step:buildTree");
     bnBuildTree();
+    console.timeEnd("step:buildTree");
 
-    // 3. Calculate Forces using BH Tree
-    calculateAllForces(); // Updates accX, accY on particles
+    console.time("step:calcForces");
+    calculateAllForces(); // Uses particle.getRadius() -> cached value
+    console.timeEnd("step:calcForces");
 
-    // 4. Update Positions using Verlet Integration
-    updatePositions(); // Updates x, y, lastX, lastY
+    console.time("step:updatePos");
+    updatePositions();
+    console.timeEnd("step:updatePos");
 
     // 5. Optional: Remove escaped particles
     removeEscapedParticles();
