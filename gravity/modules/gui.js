@@ -30,14 +30,27 @@ const mouse = {
 
 // Calculate mass from the visual radius (screen pixels)
 function calculateMassFromRadius(screenRadius) {
-    if (!canvas || camera.zoom <= 0) return 0;
-    const camera = renderApi.getCamera();
+    const camera = renderApi.getCamera(); // <<< Get the camera object FIRST
+
+    // Now check canvas, camera, and camera.zoom
+    if (!canvas || !camera || camera.zoom <= 0) {
+        console.warn("Cannot calculate mass: Canvas or Camera not ready or zoom is invalid.");
+        return 0; // Return 0 if camera or canvas isn't ready or zoom is invalid
+    }
+
     const worldRadius = screenRadius / camera.zoom;
     // Formula from original (radius = cbrt(mass*density*multiplier / (4/3*PI)))
     // Assume density = 1 for builder
     // r^3 = mass * density * multiplier / (4/3*PI)
     // mass = r^3 * (4/3*PI) / (density * multiplier)
     const density = 1; // Assume density 1 for objects created via UI
+
+    // Ensure massMultiplier is positive to avoid division by zero or negative mass
+    if (config.massMultiplier <= 0) {
+        console.warn("Mass multiplier is not positive, cannot calculate mass.");
+        return 0;
+    }
+
     return (Math.pow(worldRadius, 3) * (4 / 3 * Math.PI)) / (density * config.massMultiplier);
 }
 
