@@ -167,12 +167,19 @@ function handleCollisionsAndMerges() {
     const newParticles = []; // Store newly created merged particles
 
     // 1. Build Spatial Grid for broad phase collision detection
-    let minX = spacetime[0].x, maxX = spacetime[0].x;
-    let minY = spacetime[0].y, maxY = spacetime[0].y;
+    let minX = Infinity, maxX = -Infinity; // Initialize properly
+    let minY = Infinity, maxY = -Infinity;
     let maxRadius = 0;
 
+    if (spacetime.length > 0) { // Ensure spacetime is not empty before accessing index 0
+        minX = spacetime[0].x; maxX = spacetime[0].x;
+        minY = spacetime[0].y; maxY = spacetime[0].y;
+    }
+
     for (const particle of spacetime) {
-        if (particle.markedForRemoval) continue; // Skip already processed
+        // Skip particles already marked (e.g., from a previous pass if made iterative)
+        // if (particle.markedForRemoval) continue; // Not strictly needed with Set logic below
+
         minX = Math.min(minX, particle.x);
         maxX = Math.max(maxX, particle.x);
         minY = Math.min(minY, particle.y);
@@ -181,11 +188,12 @@ function handleCollisionsAndMerges() {
     }
 
     // Use cell size based on largest object radius (or a minimum size)
-    const cellSize = Math.max(2 * maxRadius, 1); // Ensure cell size is positive
-    const grid = new Map(); // Using Map for potentially sparse grid: "x_y" -> [particleIndex1, particleIndex2, ...]
+    // Ensure cell size is positive, even if maxRadius is 0
+    const cellSize = Math.max(2 * maxRadius, 1);
+    const grid = new Map(); // Using Map for potentially sparse grid: "x_y" -> [particleIndex1, ...]
 
     for (let i = 0; i < spacetime.length; i++) {
-        if (spacetime[i].markedForRemoval) continue;
+        // No need to check markedForRemoval here, indicesToRemove handles it
         const particle = spacetime[i];
         const gridX = Math.floor(particle.x / cellSize);
         const gridY = Math.floor(particle.y / cellSize);
@@ -198,8 +206,11 @@ function handleCollisionsAndMerges() {
     }
 
     // 2. Check for collisions (narrow phase) within grid cells and neighbors
+    // ----> Add label to the outer loop <----
+    particleLoop:
     for (let i = 0; i < spacetime.length; i++) {
-        if (indicesToRemove.has(i)) continue; // Skip if already marked for removal by a previous merge
+        // Skip if already marked for removal by a previous merge in this pass
+        if (indicesToRemove.has(i)) continue;
 
         const particleA = spacetime[i];
         const gridX = Math.floor(particleA.x / cellSize);
@@ -221,8 +232,8 @@ function handleCollisionsAndMerges() {
                         // Actual distance check for merging
                         const radiusA = particleA.getRadius();
                         const radiusB = particleB.getRadius();
-                        const mergeDistance = (radiusA + radiusB) * config.MERGE_DISTANCE_FACTOR;
-                        const distSq = getObjectDistanceSquared(particleA, particleB);
+                        const mergeDistance = (radiusA + radiusB) * config.MERGE_DISTANCE_FACTOR; // Use config
+                        const distSq = getObjectDistanceSquared(particleA, particleB); // Use helper
 
                         if (distSq < mergeDistance * mergeDistance) {
                             // Mark for merge
@@ -230,37 +241,44 @@ function handleCollisionsAndMerges() {
                             indicesToRemove.add(j);
                             particlesToMerge.push([i, j]);
                             mergedOccurred = true;
-                            // Break inner loops once particle 'i' is marked, move to next 'i'
-                            goto next_particle_i;
+
+                            // ----> Use labeled continue instead of goto <----
+                            continue particleLoop; // Skip rest of checks for particle 'i' and go to next i
                         }
                     }
                 }
             }
         }
-        next_particle_i:; // Label for goto jump
+        // Removed the invalid label: next_particle_i:;
     }
 
     // 3. Process Merges
     if (mergedOccurred) {
+        // It's crucial to create merged particles based on the *original* objects
+        // before modifying the spacetime array.
         for (const [indexA, indexB] of particlesToMerge) {
-            const merged = createMergedParticle(spacetime[indexA], spacetime[indexB]);
-            if (merged) {
-                newParticles.push(merged);
-            }
+             // Ensure indices are still valid (should be, as we only add)
+             if (spacetime[indexA] && spacetime[indexB]){
+                 const merged = createMergedParticle(spacetime[indexA], spacetime[indexB]);
+                 if (merged) {
+                     newParticles.push(merged);
+                 }
+             } else {
+                 console.warn("Skipping merge due to invalid indices:", indexA, indexB);
+             }
         }
 
         // 4. Update spacetime array: filter out removed, add new
         spacetime = spacetime.filter((_, index) => !indicesToRemove.has(index));
         spacetime.push(...newParticles);
 
-        // If merges happened, potentially run another collision pass immediately
-        // or let the next simulation step handle subsequent merges.
-        // For simplicity, we'll let the next step handle it.
-        // To handle chain reactions within one step, uncomment the line below:
-        // handleCollisionsAndMerges(); // Recursive call (careful with performance/stack)
+        // If merges happened, we might ideally run another collision pass
+        // to handle chain reactions within one step. For simplicity,
+        // the next simulation step will handle subsequent merges.
+        // To handle chain reactions within one step, you could uncomment:
+        // handleCollisionsAndMerges(); // Recursive call (use with caution!)
     }
 }
-
 
 // --- Barnes-Hut Tree Implementation ---
 
